@@ -22,6 +22,7 @@ import { SocModule } from './soc/soc.module';
         logging: ['query'],
         options: {
           trustServerCertificate: true,
+          encrypt: false,
         },
         entities: [Job],
       }),

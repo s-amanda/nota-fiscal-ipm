@@ -19,11 +19,14 @@ export class QueueService {
   }
 
   private async getJobFile(job: Job) {
-    const { fileContent } = await this.repository.findOneOrFail({
+    const [file] = await this.repository.find({
       where: { id: job.id },
       select: ['fileContent'],
     });
-    return fileContent;
+    if (!file) {
+      throw new Error('Arquivo não encontrado');
+    }
+    return file.fileContent;
   }
 
   async execute(job: Job) {

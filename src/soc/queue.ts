@@ -11,7 +11,7 @@ export class FileQueue {
 
   constructor(private readonly queue: QueueService) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_MINUTE)
   async uploadFilesQueue() {
     if (this.lock.isLocked()) {
       return;
