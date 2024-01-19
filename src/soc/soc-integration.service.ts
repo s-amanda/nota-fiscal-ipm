@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
 import path from 'path';
 import * as soap from 'soap';
 import { Configuration } from 'src/config';
@@ -31,6 +32,19 @@ export function getFileNameWithoutExtension(name: string) {
   return name.substring(0, name.lastIndexOf('.'));
 }
 
+const httpClient = axios.create();
+
+httpClient.interceptors.request.use((request) => {
+  if (request.data) {
+    // corrige erro da biblioteca soap
+    request.data = request.data.replace(
+      'Content-Transfer-Encoding: binary',
+      'Content-Transfer-Encoding: base64',
+    );
+  }
+  return request;
+});
+
 @Injectable()
 export class SocIntegrationService {
   constructor(private readonly config: ConfigService<Configuration>) {}
@@ -45,6 +59,7 @@ export class SocIntegrationService {
       passwordType: 'PasswordDigest',
     });
     const client = await soap.createClientAsync(endpoint, {
+      request: httpClient,
       overrideRootElement: {
         namespace: 'ser',
         xmlnsAttributes: [
@@ -86,7 +101,7 @@ export class SocIntegrationService {
       mimetype: file.type,
       contentId: 'file',
       name: file.name,
-      body: file.content.toString('binary'),
+      body: file.content.toString('base64'),
     };
     const fileExtension = path.extname(attachment.name).substring(1);
 
@@ -119,6 +134,5 @@ export class SocIntegrationService {
         },
       },
     );
-    console.log(client.lastRequest);
   }
 }
