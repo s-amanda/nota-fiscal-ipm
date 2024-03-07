@@ -9,7 +9,7 @@ export function formatIdentificacao(notaFiscal: NotaFiscal) {
 
   const id = {
     'cNFS-e': 131949447,
-    mod: 90,
+    mod: 98,
     serie: empresa.serie || 'S',
     //'nNFS-e': 111,
     'nNFS-e': notaFiscal.numero,
