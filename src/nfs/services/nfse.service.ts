@@ -85,7 +85,7 @@ export class NotaFiscalService {
   private async getCodigoIbge(nomeCidade: string, uf: string) {
     const { codigoIbge } = await this.cidadeRepository
       .createQueryBuilder('cidade')
-      .select('MAX(cidade.codigo)', 'codigoIbge')
+      .select('MAX(cidade.codigoIbge)', 'codigoIbge')
       .innerJoin('cidade.uf', 'uf')
       .where('UPPER(cidade.descricao) = UPPER(:nomeCidade)', { nomeCidade })
       .andWhere('UPPER(uf.uf) = LTRIM(UPPER(:uf))', { uf })
