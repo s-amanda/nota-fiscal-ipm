@@ -48,7 +48,7 @@ export class InfiscClient {
     //envia o xml para consulta e retorna o campo 'data' do objeto com o resultado
     const { data } = await axios({
       method: 'post',
-      url: 'https://nfsehomol.caxias.rs.gov.br/portal/Servicos',
+      url: 'https://nfse.caxias.rs.gov.br/portal/Servicos',
       data: Buffer.from(requestXml),
       headers: { 'Content-Type': false },
     });
