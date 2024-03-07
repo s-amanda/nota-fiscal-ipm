@@ -20,7 +20,7 @@ export function formatIdentificacao(notaFiscal: NotaFiscal) {
     tpEmis: 'N',
     cancelada: 'N',
     canhoto: 0,
-    ambienteEmi: 2, //hml
+    ambienteEmi: 1, //hml
     formaEmi: 2,
     empreitadaGlobal: 2,
   };
