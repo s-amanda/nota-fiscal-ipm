@@ -4,7 +4,7 @@ import { removeFormat } from './cpf-cnpj';
 export function gerarChaveAcesso(notaFiscal: NotaFiscal) {
   const empresa = notaFiscal.empresa;
   const cnpj = removeFormat(empresa.cnpj);
-  const serie = (empresa.serie || 'S').toUpperCase().padEnd(3, '0');
+  const serie = (empresa.serie || 'S').toUpperCase().padStart(3, '0');
   //const numeroNotaFiscal = String(111).padStart(9, '0');
   const numeroNotaFiscal = String(notaFiscal.numero).padStart(9, '0');
 
