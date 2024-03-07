@@ -72,15 +72,14 @@ export class NotaFiscalService {
   }
 
   private async buscarNotaFiscal(id: number) {
-    try {
-      const notaFiscal = await this.notaFiscalRepository.findOneOrFail({
-        where: { id },
-        relations: ['itens', 'empresa', 'pessoa'],
-      });
-      return notaFiscal;
-    } catch (error) {
+    const [notaFiscal] = await this.notaFiscalRepository.find({
+      where: { id },
+      relations: ['itens', 'empresa', 'pessoa'],
+    });
+    if (!notaFiscal) {
       throw new NotFoundException('Nota fiscal não encontrada');
     }
+    return notaFiscal;
   }
 
   private async getCodigoIbge(nomeCidade: string, uf: string) {
