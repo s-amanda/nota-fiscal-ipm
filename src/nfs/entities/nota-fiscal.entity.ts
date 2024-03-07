@@ -73,7 +73,7 @@ export class NotaFiscal {
   @Column({ name: 'NUM_LOTE_NOTFIS' })
   numeroLote!: string;
 
-  @Column({ name: 'SUCESSO' })
+  @Column({ name: 'FLG_SUCESSO_NF' })
   sucesso!: string;
 
   @OneToMany(() => ItemNotaServico, (item) => item.notaFiscal)
