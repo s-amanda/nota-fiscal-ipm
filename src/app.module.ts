@@ -13,6 +13,7 @@ import { Servico } from './nfs/entities/servico.entity';
 import { Uf } from './nfs/entities/uf.entity';
 import { NfsModule } from './nfs/nfs.module';
 import { Job } from './soc/entities/job';
+import { SocModule } from './soc/soc.module';
 
 @Module({
   imports: [
