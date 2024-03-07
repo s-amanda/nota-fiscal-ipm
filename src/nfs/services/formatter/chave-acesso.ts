@@ -8,5 +8,5 @@ export function gerarChaveAcesso(notaFiscal: NotaFiscal) {
   //const numeroNotaFiscal = String(111).padStart(9, '0');
   const numeroNotaFiscal = String(notaFiscal.numero).padStart(9, '0');
 
-  return `43${cnpj}90${serie}${numeroNotaFiscal}131949447`;
+  return `43${cnpj}98${serie}${numeroNotaFiscal}131949447`;
 }
