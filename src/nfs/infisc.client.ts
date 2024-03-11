@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
 import fs from 'fs/promises';
+import { Configuration } from 'src/config';
 import { create } from 'xmlbuilder2';
-import { HistoricoNfseService } from './services/historico-nfse.service';
 import { getKeyFromCertificate } from './utils/certificate';
 import { sign } from './utils/signature';
 
 @Injectable()
 export class InfiscClient {
-  constructor(private historicoNfseService: HistoricoNfseService) {}
+  constructor(private readonly config: ConfigService<Configuration>) {}
 
   async execute(method: string, documentData: object) {
     //transforma o objeto para xml
@@ -17,7 +18,12 @@ export class InfiscClient {
     const xml = doc.end({ prettyPrint: true, headless: true });
 
     //le o conteudo do certificado e converte para o formato aceito pela biblioteca de assinatura
-    const certificateFile = await fs.readFile('certificadoalfa.pfx', 'base64');
+    // const certificateFile = await fs.readFile('certificadoalfa.pfx', 'base64');
+    // const { cert, key } = getKeyFromCertificate(certificateFile);
+    const certificate = this.config.getOrThrow('nfse.caxias.certificate', {
+      infer: true,
+    });
+    const certificateFile = await fs.readFile(certificate, 'base64');
     const { cert, key } = getKeyFromCertificate(certificateFile);
 
     //assina o xml
@@ -48,7 +54,9 @@ export class InfiscClient {
     //envia o xml para consulta e retorna o campo 'data' do objeto com o resultado
     const { data } = await axios({
       method: 'post',
-      url: 'https://nfse.caxias.rs.gov.br/portal/Servicos',
+      url: this.config.getOrThrow('nfse.caxias.endpoint', {
+        infer: true,
+      }),
       data: Buffer.from(requestXml),
       headers: { 'Content-Type': false },
     });

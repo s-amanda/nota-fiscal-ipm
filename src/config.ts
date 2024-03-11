@@ -9,6 +9,13 @@ export function buildConfiguration() {
       responsibleCode: process.env.SOC_INTEGRATION_RESPONSIBLE_CODE,
       userCode: process.env.SOC_INTEGRATION_USER_CODE,
     },
+    nfse: {
+      caxias: {
+        certificate: process.env.NFSE_CAXIAS_CERTIFICATE,
+        endpoint: process.env.NFSE_CAXIAS_ENDPOINT,
+        ambiente: process.env.NFSE_CAXIAS_AMBIENTE,
+      },
+    },
     database: {
       hostname: process.env.SOC_INTEGRATION_DB_HOSTNAME,
       username: process.env.SOC_INTEGRATION_DB_USERNAME,

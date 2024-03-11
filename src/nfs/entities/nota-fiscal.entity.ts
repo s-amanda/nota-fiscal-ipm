@@ -71,10 +71,16 @@ export class NotaFiscal {
   notaFiscalImpressa!: string;
 
   @Column({ name: 'NUM_LOTE_NOTFIS' })
-  numeroLote!: string;
+  numeroLote!: number;
+
+  @Column({ name: 'NUM_RPS_NOTFIS' })
+  numeroRps!: number;
 
   @Column({ name: 'FLG_SUCESSO_NF' })
   sucesso!: string;
+
+  @Column({ name: 'DTH_CANCELADA' })
+  dataCancelamento!: Date;
 
   @OneToMany(() => ItemNotaServico, (item) => item.notaFiscal)
   itens!: ItemNotaServico[];

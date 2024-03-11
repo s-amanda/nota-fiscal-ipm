@@ -5,9 +5,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mutex } from 'async-mutex';
+import format from 'date-fns/format';
 import { Repository } from 'typeorm';
 import { Cidade } from '../entities/cidade.entity';
 import { NotaFiscal } from '../entities/nota-fiscal.entity';
+import { NotaJaCanceladaException } from '../exceptions/nota-ja-cancelada';
 import { InfiscService } from './infisc.service';
 
 @Injectable()
@@ -29,7 +31,6 @@ export class NotaFiscalService {
         throw new BadRequestException('Essa nota fiscal já foi enviada');
       }
       notaFiscal.numero = await this.buscarNumeroNotaEmpresa(notaFiscal);
-      //notaFiscal.numero = 168;
 
       const codigoIbge = await this.getCodigoIbge(
         notaFiscal.cidade,
@@ -44,8 +45,15 @@ export class NotaFiscalService {
 
         await this.notaFiscalRepository.update(
           { id },
-          { notaFiscalSalva: 'S', numero: notaFiscal.numero, sucesso: 'S' },
+          {
+            notaFiscalSalva: 'S',
+            numero: notaFiscal.numero,
+            sucesso: 'S',
+            numeroLote: notaFiscal.numero,
+            numeroRps: notaFiscal.numero,
+          },
         );
+
         return envio;
       } catch (error) {
         await this.notaFiscalRepository.update({ id }, { sucesso: 'N' });
@@ -56,6 +64,12 @@ export class NotaFiscalService {
 
   async gerarPdf(id: number) {
     const notaFiscal = await this.buscarNotaFiscal(id);
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!notaFiscal) {
+      throw new NotFoundException('Nota fiscal não encontrada');
+    }
+
     const pdf = await this.infiscService.gerarPdf(notaFiscal);
 
     await this.notaFiscalRepository.update(
@@ -68,6 +82,19 @@ export class NotaFiscalService {
 
   async cancelarNotaFiscal(id: number) {
     const notaFiscal = await this.buscarNotaFiscal(id);
+
+    if (notaFiscal.notaFiscalImpressa === 'A') {
+      throw new NotaJaCanceladaException();
+    }
+
+    await this.notaFiscalRepository.update(
+      { id },
+      {
+        dataCancelamento: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+        notaFiscalImpressa: 'A',
+      },
+    );
+
     return this.infiscService.cancelarNotaFiscal(notaFiscal);
   }
 
@@ -79,6 +106,7 @@ export class NotaFiscalService {
     if (!notaFiscal) {
       throw new NotFoundException('Nota fiscal não encontrada');
     }
+
     return notaFiscal;
   }
 
@@ -90,6 +118,7 @@ export class NotaFiscalService {
       .where('UPPER(cidade.descricao) = UPPER(:nomeCidade)', { nomeCidade })
       .andWhere('UPPER(uf.uf) = LTRIM(UPPER(:uf))', { uf })
       .getRawOne();
+
     return codigoIbge as string;
   }
 
