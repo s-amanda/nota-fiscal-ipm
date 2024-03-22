@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import PDFDocument from 'pdfkit';
 import { WritableStreamBuffer } from 'stream-buffers';
 import { NotaFiscal } from '../entities/nota-fiscal.entity';
+import { MotivoCancelamento } from '../enums/motivo-cancelamento.enum';
 import { InfiscClient } from '../infisc.client';
 import { toArray } from '../utils/array';
 import { gerarChaveAcesso } from './formatter/chave-acesso';
@@ -107,7 +108,7 @@ export class InfiscService {
     return ultimaTentativa!;
   }
 
-  async cancelarNotaFiscal(notaFiscal: NotaFiscal) {
+  async cancelarNotaFiscal(notaFiscal: NotaFiscal, motivo: MotivoCancelamento) {
     const cnpj = notaFiscal.empresa.cnpj;
     const chaveAcesso = gerarChaveAcesso(notaFiscal);
 
@@ -116,7 +117,7 @@ export class InfiscService {
         '@versao': '1.0',
         CNPJ: removeFormat(cnpj),
         'chvAcessoNFS-e': chaveAcesso,
-        motivo: 1, // “1”: Serviço não foi prestado ou “2”: NFS-e emitida com dados incorretos
+        motivo: motivo === MotivoCancelamento.SERVICO_NAO_PRESTADO ? 1 : 2, // “1”: Serviço não foi prestado ou “2”: NFS-e emitida com dados incorretos
       },
     });
 

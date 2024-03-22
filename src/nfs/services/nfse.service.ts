@@ -9,6 +9,7 @@ import format from 'date-fns/format';
 import { Repository } from 'typeorm';
 import { Cidade } from '../entities/cidade.entity';
 import { NotaFiscal } from '../entities/nota-fiscal.entity';
+import { MotivoCancelamento } from '../enums/motivo-cancelamento.enum';
 import { NotaJaCanceladaException } from '../exceptions/nota-ja-cancelada';
 import { InfiscService } from './infisc.service';
 
@@ -80,7 +81,7 @@ export class NotaFiscalService {
     return pdf;
   }
 
-  async cancelarNotaFiscal(id: number) {
+  async cancelarNotaFiscal(id: number, motivo: MotivoCancelamento) {
     const notaFiscal = await this.buscarNotaFiscal(id);
 
     if (notaFiscal.notaFiscalImpressa === 'A') {
@@ -95,7 +96,7 @@ export class NotaFiscalService {
       },
     );
 
-    return this.infiscService.cancelarNotaFiscal(notaFiscal);
+    return this.infiscService.cancelarNotaFiscal(notaFiscal, motivo);
   }
 
   private async buscarNotaFiscal(id: number) {

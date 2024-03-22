@@ -4,9 +4,11 @@ import {
   Get,
   Param,
   Post,
+  Query,
   StreamableFile,
 } from '@nestjs/common';
 import { NotaFiscalService } from 'src/nfs/services/nfse.service';
+import { MotivoCancelamento } from '../enums/motivo-cancelamento.enum';
 
 @Controller('nfse')
 export class NfseController {
@@ -28,7 +30,10 @@ export class NfseController {
   }
 
   @Delete(':id')
-  cancelarNotaFiscal(@Param('id') id: number) {
-    return this.nfseService.cancelarNotaFiscal(id);
+  cancelarNotaFiscal(
+    @Param('id') id: number,
+    @Query('motivo') motivo: MotivoCancelamento,
+  ) {
+    return this.nfseService.cancelarNotaFiscal(id, motivo);
   }
 }

@@ -1,0 +1,4 @@
+export enum MotivoCancelamento {
+  SERVICO_NAO_PRESTADO = 'SERVICO_NAO_PRESTADO',
+  DADOS_INCORRETOS = 'DADOS_INCORRETOS',
+}
