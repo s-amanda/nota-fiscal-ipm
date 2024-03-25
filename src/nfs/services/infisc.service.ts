@@ -7,6 +7,7 @@ import { NotaFiscal } from '../entities/nota-fiscal.entity';
 import { MotivoCancelamento } from '../enums/motivo-cancelamento.enum';
 import { InfiscClient } from '../infisc.client';
 import { toArray } from '../utils/array';
+import { sleep } from '../utils/sleep';
 import { gerarChaveAcesso } from './formatter/chave-acesso';
 import { removeFormat } from './formatter/cpf-cnpj';
 import { formatLote } from './formatter/envio-lote';
@@ -93,7 +94,7 @@ export class InfiscService {
     // const chaveAcesso = gerarChaveAcesso(notaFiscal);
     let ultimaTentativa;
 
-    for (let tentativa = 0; tentativa < 3; tentativa++) {
+    for (let tentativa = 0; tentativa < 10; tentativa++) {
       ultimaTentativa = await this.infiscClient.execute('obterCriticaLote', {
         pedidoStatusLote: {
           '@versao': '1.0',
@@ -109,6 +110,7 @@ export class InfiscService {
       if (validacao.sit !== CodigoSituacao.EM_PROCESSAMENTO) {
         return ultimaTentativa;
       }
+      await sleep(1000);
     }
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return ultimaTentativa!;
