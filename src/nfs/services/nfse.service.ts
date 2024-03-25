@@ -52,6 +52,7 @@ export class NotaFiscalService {
           { id },
           {
             notaFiscalSalva: 'S',
+            notaFiscalImpressa: 'S',
             numero: notaFiscal.numero,
             sucesso: 'S',
             numeroLote: notaFiscal.numero,
