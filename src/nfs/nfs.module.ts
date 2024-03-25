@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NfseController } from './controllers/nfse.controller';
 import { Cidade } from './entities/cidade.entity';
@@ -16,6 +17,7 @@ import { NotaFiscalService } from './services/nfse.service';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([
       Empresa,
       ItemNotaServico,

@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Body>
+    <ns1:enviarLoteNotas soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="http://ws.pc.gif.com.br/">
+      <xml>&lt;envioLote versao="1.0"&gt;
+  &lt;CNPJ&gt;92860667001740&lt;/CNPJ&gt;
+  &lt;dhTrans&gt;2024-03-25 11:12:35&lt;/dhTrans&gt;
+  &lt;NFS-e&gt;
+    &lt;infNFSe versao="1.1"&gt;
+      &lt;Id&gt;
+        &lt;cNFS-e&gt;131949447&lt;/cNFS-e&gt;
+        &lt;mod&gt;98&lt;/mod&gt;
+        &lt;serie&gt;S&lt;/serie&gt;
+        &lt;nNFS-e&gt;301&lt;/nNFS-e&gt;
+        &lt;dEmi&gt;2024-03-25&lt;/dEmi&gt;
+        &lt;hEmi&gt;11:12&lt;/hEmi&gt;
+        &lt;tpNF&gt;1&lt;/tpNF&gt;
+        &lt;refNF&gt;43928606670017409800S000000301131949447&lt;/refNF&gt;
+        &lt;tpEmis&gt;N&lt;/tpEmis&gt;
+        &lt;cancelada&gt;N&lt;/cancelada&gt;
+        &lt;canhoto&gt;0&lt;/canhoto&gt;
+        &lt;ambienteEmi&gt;2&lt;/ambienteEmi&gt;
+        &lt;formaEmi&gt;2&lt;/formaEmi&gt;
+        &lt;empreitadaGlobal&gt;2&lt;/empreitadaGlobal&gt;
+      &lt;/Id&gt;
+      &lt;prest&gt;
+        &lt;CNPJ&gt;92860667001740&lt;/CNPJ&gt;
+        &lt;xNome&gt;Alfa Laboratório Ltda&lt;/xNome&gt;
+        &lt;xFant/&gt;
+        &lt;IM&gt;172724&lt;/IM&gt;
+        &lt;end&gt;
+          &lt;xLgr&gt;Av. Júlio de Castilhos&lt;/xLgr&gt;
+          &lt;nro&gt;2307&lt;/nro&gt;
+          &lt;xBairro&gt;Centro&lt;/xBairro&gt;
+          &lt;cMun&gt;4305108&lt;/cMun&gt;
+          &lt;xMun&gt;Caxias do Sul&lt;/xMun&gt;
+          &lt;UF&gt;RS&lt;/UF&gt;
+          &lt;CEP&gt;95010000&lt;/CEP&gt;
+          &lt;cPais&gt;1058&lt;/cPais&gt;
+          &lt;xPais&gt;BRASIL&lt;/xPais&gt;
+        &lt;/end&gt;
+        &lt;fone&gt;5432903015&lt;/fone&gt;
+        &lt;IE/&gt;
+        &lt;regimeTrib&gt;3&lt;/regimeTrib&gt;
+      &lt;/prest&gt;
+      &lt;TomS&gt;
+        &lt;CPF&gt;02957353091&lt;/CPF&gt;
+        &lt;xNome&gt;RUFINO JERONIMO MAZZOCHI&lt;/xNome&gt;
+        &lt;ender&gt;
+          &lt;xLgr&gt;ESTRADA SÃO BRÁS - DOMINGOS MAZZOCHI&lt;/xLgr&gt;
+          &lt;nro&gt;00&lt;/nro&gt;
+          &lt;xCpl/&gt;
+          &lt;xBairro&gt;Ana Rech&lt;/xBairro&gt;
+          &lt;cMun&gt;4305108&lt;/cMun&gt;
+          &lt;xMun&gt;Caxias do Sul&lt;/xMun&gt;
+          &lt;UF&gt;RS&lt;/UF&gt;
+          &lt;CEP&gt;95010000&lt;/CEP&gt;
+          &lt;cPais&gt;1058&lt;/cPais&gt;
+          &lt;xPais&gt;BRASIL&lt;/xPais&gt;
+        &lt;/ender&gt;
+        &lt;IE/&gt;
+        &lt;IM/&gt;
+      &lt;/TomS&gt;
+      &lt;det&gt;
+        &lt;nItem&gt;1&lt;/nItem&gt;
+        &lt;serv&gt;
+          &lt;cServ&gt;1686&lt;/cServ&gt;
+          &lt;cLCServ&gt;0403&lt;/cLCServ&gt;
+          &lt;xServ&gt;Exames Realizados cod. 4.02&lt;/xServ&gt;
+          &lt;localVerifResServ&gt;1&lt;/localVerifResServ&gt;
+          &lt;uTrib&gt;UN&lt;/uTrib&gt;
+          &lt;qTrib&gt;1&lt;/qTrib&gt;
+          &lt;vUnit&gt;39.00&lt;/vUnit&gt;
+          &lt;vServ&gt;39.00&lt;/vServ&gt;
+          &lt;vDesc&gt;0&lt;/vDesc&gt;
+          &lt;vBCISS&gt;39.00&lt;/vBCISS&gt;
+          &lt;pISS&gt;4&lt;/pISS&gt;
+          &lt;vISS&gt;1.56&lt;/vISS&gt;
+          &lt;vRed&gt;0&lt;/vRed&gt;
+        &lt;/serv&gt;
+      &lt;/det&gt;
+      &lt;total&gt;
+        &lt;vServ&gt;39.00&lt;/vServ&gt;
+        &lt;vDesc&gt;0&lt;/vDesc&gt;
+        &lt;vtNF&gt;39.00&lt;/vtNF&gt;
+        &lt;vtLiq&gt;39.00&lt;/vtLiq&gt;
+        &lt;totalAproxTrib&gt;0&lt;/totalAproxTrib&gt;
+        &lt;vtLiqFaturas&gt;39.00&lt;/vtLiqFaturas&gt;
+        &lt;ISS&gt;
+          &lt;vBCISS&gt;39.00&lt;/vBCISS&gt;
+          &lt;vISS&gt;1.56&lt;/vISS&gt;
+        &lt;/ISS&gt;
+      &lt;/total&gt;
+      &lt;faturas&gt;
+        &lt;fat&gt;
+          &lt;nItem&gt;1&lt;/nItem&gt;
+          &lt;nFat&gt;1&lt;/nFat&gt;
+          &lt;dVenc&gt;2024-03-25&lt;/dVenc&gt;
+          &lt;vFat&gt;39.00&lt;/vFat&gt;
+        &lt;/fat&gt;
+      &lt;/faturas&gt;
+      &lt;infAdicLT&gt;4305108&lt;/infAdicLT&gt;
+      &lt;infAdic&gt;Valor Aproximado de Tributos: Federais: R$ 5.25
+           (13,45%) Municipais: R$ 0.82
+           (2,09%) - Fonte: IBPT/FECOMERCIO RS&lt;/infAdic&gt;
+    &lt;/infNFSe&gt;
+  &lt;/NFS-e&gt;
+&lt;Signature xmlns="http://www.w3.org/2000/09/xmldsig#"&gt;&lt;SignedInfo&gt;&lt;CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;&lt;SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;&lt;Reference URI=""&gt;&lt;Transforms&gt;&lt;Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;&lt;Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;&lt;/Transforms&gt;&lt;DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;&lt;DigestValue&gt;B86fN+6SKpS70WNCBS8aXLL4g2g=&lt;/DigestValue&gt;&lt;/Reference&gt;&lt;/SignedInfo&gt;&lt;SignatureValue&gt;kjLj9BtV0d7N45t/NKdfmSwdWnVeD4w4WXjs6dbGDeDPyHJFp+edTQ3flyDSXCmW/ub5EmrpJfUDlAN7a1A51nn2S1dgtsWtAhyZHY0uDYuguUfosF1iFuYTNEtc7WcQ+1CpTAvj5T/in5DOz4tlhVH+RIR105Dtfcl6MmZFkhmeGBzsrKiwKJE77S057T5BheJOUKQ8N+jCL4MkchUgEFPFJgtEbnnAfOOG9Yt0iX7idffQcNQxMo/yJFSE/7vCdsYckXbL/+ASO3rXXNzciuwH+PaNJAv/FlWjU6Z+9PxDLxxs7LXfVFjM1lieCRZ7oI+VFJWjACTNP30J/2JbEA==&lt;/SignatureValue&gt;&lt;KeyInfo&gt;&lt;X509Data&gt;&lt;X509Certificate&gt;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&lt;/X509Certificate&gt;&lt;/X509Data&gt;&lt;/KeyInfo&gt;&lt;/Signature&gt;&lt;/envioLote&gt;</xml>
+    </ns1:enviarLoteNotas>
+  </soapenv:Body>
+</soapenv:Envelope>

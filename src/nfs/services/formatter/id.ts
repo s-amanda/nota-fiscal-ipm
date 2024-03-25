@@ -4,11 +4,13 @@ import { Configuration } from 'src/config';
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
 import { gerarChaveAcesso } from './chave-acesso';
 
-export function formatIdentificacao(notaFiscal: NotaFiscal) {
+export function formatIdentificacao(
+  notaFiscal: NotaFiscal,
+  config: ConfigService<Configuration>,
+) {
   const data = format(new Date(), 'yyyy-MM-dd');
   const hora = format(new Date(), 'HH:mm');
   const empresa = notaFiscal.empresa;
-  const config = new ConfigService<Configuration>();
 
   const id = {
     'cNFS-e': 131949447,

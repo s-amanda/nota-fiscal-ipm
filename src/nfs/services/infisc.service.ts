@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import PDFDocument from 'pdfkit';
+import { Configuration } from 'src/config';
 import { WritableStreamBuffer } from 'stream-buffers';
 import { NotaFiscal } from '../entities/nota-fiscal.entity';
 import { MotivoCancelamento } from '../enums/motivo-cancelamento.enum';
@@ -23,9 +25,13 @@ export class InfiscService {
     private historicoNfseService: HistoricoNfseService,
   ) {}
 
-  async enviarNotaFiscal(notaFiscal: NotaFiscal, codigoIbge: string) {
+  async enviarNotaFiscal(
+    notaFiscal: NotaFiscal,
+    codigoIbge: string,
+    config: ConfigService<Configuration>,
+  ) {
     //depois de cancelada o seq_notfis pode ser enviado novamente com outro numero de nfs-e?
-    const envioLote = formatLote(notaFiscal, codigoIbge);
+    const envioLote = formatLote(notaFiscal, codigoIbge, config);
 
     const {
       content: { cLote: numeroLote, sit: situacao },

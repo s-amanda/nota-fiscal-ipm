@@ -3,9 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mutex } from 'async-mutex';
 import format from 'date-fns/format';
+import { Configuration } from 'src/config';
 import { Repository } from 'typeorm';
 import { Cidade } from '../entities/cidade.entity';
 import { NotaFiscal } from '../entities/nota-fiscal.entity';
@@ -23,6 +25,7 @@ export class NotaFiscalService {
     @InjectRepository(Cidade)
     private cidadeRepository: Repository<Cidade>,
     private infiscService: InfiscService,
+    private config: ConfigService<Configuration>,
   ) {}
 
   async enviarNotaFiscal(id: number) {
@@ -42,6 +45,7 @@ export class NotaFiscalService {
         const envio = await this.infiscService.enviarNotaFiscal(
           notaFiscal,
           codigoIbge,
+          this.config,
         );
 
         await this.notaFiscalRepository.update(
