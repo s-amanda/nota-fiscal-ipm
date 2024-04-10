@@ -66,6 +66,12 @@ export class Empresa {
   @Column({ name: 'PER_ALIQUOTA_ISS_NFE', type: 'numeric' })
   aliquotaIss!: number;
 
+  @Column({ name: 'NUM_RPS_EMP' })
+  numeroRps!: number;
+
+  @Column({ name: 'NaturezaOperacao' })
+  naturezaOperacao!: number;
+
   @OneToMany(() => NotaFiscal, (nota) => nota.empresa)
   notasFiscais!: NotaFiscal[];
 

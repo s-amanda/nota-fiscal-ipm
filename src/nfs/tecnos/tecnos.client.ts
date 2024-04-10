@@ -5,25 +5,23 @@ import { XMLParser } from 'fast-xml-parser';
 import fs from 'fs/promises';
 import { Configuration } from 'src/config';
 import { create } from 'xmlbuilder2';
-import { getKeyFromCertificate } from './utils/certificate';
-import { sign } from './utils/signature';
+import { getKeyFromCertificate } from '../utils/certificate';
+import { sign } from '../utils/signature';
 
 @Injectable()
-export class InfiscClient {
+export class TecnosClient {
   constructor(private readonly config: ConfigService<Configuration>) {}
 
   async execute(method: string, documentData: object) {
     //transforma o objeto para xml
     const doc = create(documentData);
-    const xml = doc.end({ prettyPrint: true, headless: true });
+    const xml = doc.end({ prettyPrint: false, headless: true });
 
     //le o conteudo do certificado e converte para o formato aceito pela biblioteca de assinatura
-    // const certificateFile = await fs.readFile('certificadoalfa.pfx', 'base64');
-    // const { cert, key } = getKeyFromCertificate(certificateFile);
-    const certificate = this.config.getOrThrow('nfse.caxias.certificate', {
-      infer: true,
-    });
-    const certificateFile = await fs.readFile(certificate, 'base64');
+    const certificateFile = await fs.readFile(
+      'certificadosaomarcos.pfx',
+      'base64',
+    );
     const { cert, key } = getKeyFromCertificate(certificateFile);
 
     //assina o xml
@@ -33,14 +31,11 @@ export class InfiscClient {
     const signedXml = {
       'soapenv:Envelope': {
         '@xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/',
-        '@xmlns:xsd': 'http://www.w3.org/2001/XMLSchema',
-        '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
         'soapenv:Body': {
-          [`ns1:${method}`]: {
-            '@soapenv:encodingStyle':
-              'http://schemas.xmlsoap.org/soap/encoding/',
-            '@xmlns:ns1': 'http://ws.pc.gif.com.br/',
-            xml: signed,
+          //[method]
+          mEnvioLoteRPSSincrono: {
+            '@xmlns': 'http://tempuri.org/',
+            remessa: signed,
           },
         },
       },
@@ -48,20 +43,21 @@ export class InfiscClient {
 
     //converte o objeto com xml para xml
     const requestXml = create(signedXml).end({ prettyPrint: true });
-    if (method === 'enviarLoteNotas')
-      await fs.writeFile('request.xml', requestXml);
+    await fs.writeFile('request-TECNOS.xml', requestXml);
 
     //envia o xml para consulta e retorna o campo 'data' do objeto com o resultado
     const { data } = await axios({
       method: 'post',
-      url: this.config.getOrThrow('nfse.caxias.endpoint', {
-        infer: true,
-      }),
+      url: 'http://homologasmarcos.nfse-tecnos.com.br:9091/EnvioLoteRPSSincrono.asmx',
       data: Buffer.from(requestXml),
-      headers: { 'Content-Type': false },
+      headers: {
+        'Content-Type': 'text/xml; charset=utf-8',
+        SOAPAction: 'http://tempuri.org/mEnvioLoteRPSSincrono',
+      },
     });
 
-    await fs.writeFile('response.xml', data as string);
+    await fs.writeFile('response-TECNOS.xml', data as string);
+
     //converte o valor do campo 'data' de string para xml
     const parser = new XMLParser();
     const envelope = parser.parse(data as string);

@@ -13,7 +13,7 @@ import { Cidade } from '../entities/cidade.entity';
 import { NotaFiscal } from '../entities/nota-fiscal.entity';
 import { MotivoCancelamento } from '../enums/motivo-cancelamento.enum';
 import { NotaJaCanceladaException } from '../exceptions/nota-ja-cancelada';
-import { InfiscService } from './infisc.service';
+import { InfiscService } from '../infisc/services/infisc.service';
 
 @Injectable()
 export class NotaFiscalService {
@@ -34,6 +34,7 @@ export class NotaFiscalService {
       if (notaFiscal.notaFiscalSalva === 'S') {
         throw new BadRequestException('Essa nota fiscal já foi enviada');
       }
+      //
       notaFiscal.numero = await this.buscarNumeroNotaEmpresa(notaFiscal);
 
       const codigoIbge = await this.getCodigoIbge(

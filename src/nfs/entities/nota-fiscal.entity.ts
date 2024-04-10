@@ -82,6 +82,27 @@ export class NotaFiscal {
   @Column({ name: 'DTH_CANCELADA' })
   dataCancelamento!: Date;
 
+  @Column({ name: 'NUM_TELEFONE_NOTFIS' })
+  telefone!: string;
+
+  @Column({ name: 'END_EMAIL_PES' })
+  email!: string;
+
+  @Column({ name: 'NaturezaOperacao' })
+  naturezaOperacao!: number;
+
+  @Column({ name: 'VLR_PIS_NOTFIS' })
+  valorPis!: number;
+
+  @Column({ name: 'VLR_COFINS_NOTFIS' })
+  valorCofins!: number;
+
+  @Column({ name: 'VLR_IRRF_NOTFIS' })
+  valorIrrf!: number;
+
+  @Column({ name: 'VLR_CSSL_NOTFIS' })
+  valorCsll!: number;
+
   @OneToMany(() => ItemNotaServico, (item) => item.notaFiscal)
   itens!: ItemNotaServico[];
 
