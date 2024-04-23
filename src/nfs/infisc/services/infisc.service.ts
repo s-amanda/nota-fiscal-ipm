@@ -178,10 +178,6 @@ export class InfiscService {
 
   async enviarEmailNotaFiscal(notaFiscal: NotaFiscal) {
     const arquivo = await this.gerarPdf(notaFiscal);
-    await this.emailService.sendEmail(
-      'alangomes11@gmail.com',
-      arquivo,
-      'Nota fiscal',
-    );
+    await this.emailService.sendEmail(notaFiscal.email, arquivo, 'Nota fiscal');
   }
 }
