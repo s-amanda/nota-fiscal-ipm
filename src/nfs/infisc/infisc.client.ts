@@ -48,8 +48,6 @@ export class InfiscClient {
 
     //converte o objeto com xml para xml
     const requestXml = create(signedXml).end({ prettyPrint: true });
-    if (method === 'enviarLoteNotas')
-      await fs.writeFile('request.xml', requestXml);
 
     //envia o xml para consulta e retorna o campo 'data' do objeto com o resultado
     const { data } = await axios({
@@ -61,7 +59,6 @@ export class InfiscClient {
       headers: { 'Content-Type': false },
     });
 
-    await fs.writeFile('response.xml', data as string);
     //converte o valor do campo 'data' de string para xml
     const parser = new XMLParser();
     const envelope = parser.parse(data as string);
