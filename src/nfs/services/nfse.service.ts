@@ -62,7 +62,9 @@ export class NotaFiscalService {
         );
 
         if (notaFiscal.email) {
-          await this.infiscService.enviarEmailNotaFiscal(notaFiscal);
+          this.infiscService
+            .enviarEmailNotaFiscal(notaFiscal)
+            .catch(console.error);
         }
 
         return envio;
