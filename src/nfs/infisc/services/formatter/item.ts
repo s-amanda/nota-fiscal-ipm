@@ -11,8 +11,8 @@ export function formatItem(
 
   const serv = {
     cServ: empresa.codigoServico,
-    //cLCServ: empresa.codigoLcServico,
-    cLCServ: '0403',
+    cLCServ: empresa.codigoLcServico,
+    //cLCServ: '0403',
     xServ: item.descricao ?? item.servico.descricao,
     localTributacao: empresa.codigoMunicipioTributacao,
     localVerifResServ: 1, //Brasil
