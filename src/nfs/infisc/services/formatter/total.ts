@@ -3,15 +3,17 @@ import { removeFormat } from './cpf-cnpj';
 
 export function formatTotal(notaFiscal: NotaFiscal) {
   //const tipoPessoa = notaFiscal.pessoa.tipoPessoa;
-  const documentoTomador = removeFormat(notaFiscal.documentoTomador);
+  const documentoTomador = removeFormat(
+    notaFiscal.documentoTomador || '00000000000',
+  );
   const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
-  let valorIss = notaFiscal.valorServico;
   let baseCalculo = 0.0;
 
   if (documentoTomador.length === 11 || notaFiscal.valorIss === null) {
     baseCalculo = notaFiscal.valorServico;
-    valorIss = baseCalculo * (aliquotaIss / 100);
   }
+
+  const valorIss = baseCalculo * (aliquotaIss / 100);
 
   const total = {
     vServ: notaFiscal.valorServico.toFixed(2),
