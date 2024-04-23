@@ -54,16 +54,7 @@ export class InfiscService {
       chaveAcesso,
     );
 
-    const consulta = await this.consultarNotaFiscal(
-      notaFiscal,
-      String(numeroLote),
-    );
-
-    if (notaFiscal.email) {
-      await this.enviarEmailNotaFiscal(notaFiscal);
-    }
-
-    return consulta;
+    return this.consultarNotaFiscal(notaFiscal, String(numeroLote));
   }
 
   private async consultarNotaFiscal(

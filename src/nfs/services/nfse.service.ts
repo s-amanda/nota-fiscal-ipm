@@ -61,6 +61,10 @@ export class NotaFiscalService {
           },
         );
 
+        if (notaFiscal.email) {
+          await this.infiscService.enviarEmailNotaFiscal(notaFiscal);
+        }
+
         return envio;
       } catch (error) {
         await this.notaFiscalRepository.update({ id }, { sucesso: 'N' });
