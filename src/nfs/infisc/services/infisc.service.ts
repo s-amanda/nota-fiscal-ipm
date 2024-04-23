@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import PDFDocument from 'pdfkit';
 import { Configuration } from 'src/config';
+import { EmailService } from 'src/nfs/services/email.service';
 import { WritableStreamBuffer } from 'stream-buffers';
 import { NotaFiscal } from '../../entities/nota-fiscal.entity';
 import { MotivoCancelamento } from '../../enums/motivo-cancelamento.enum';
@@ -24,6 +25,7 @@ export class InfiscService {
   constructor(
     private infiscClient: InfiscClient,
     private historicoNfseService: HistoricoNfseService,
+    private emailService: EmailService,
   ) {}
 
   async enviarNotaFiscal(
@@ -52,7 +54,11 @@ export class InfiscService {
       chaveAcesso,
     );
 
-    return await this.consultarNotaFiscal(notaFiscal, String(numeroLote));
+    await this.consultarNotaFiscal(notaFiscal, String(numeroLote));
+
+    if (notaFiscal.email) {
+      await this.enviarEmailNotaFiscal(notaFiscal);
+    }
   }
 
   private async consultarNotaFiscal(
@@ -163,5 +169,14 @@ export class InfiscService {
       });
       stream.once('error', reject);
     });
+  }
+
+  async enviarEmailNotaFiscal(notaFiscal: NotaFiscal) {
+    const arquivo = await this.gerarPdf(notaFiscal);
+    await this.emailService.sendEmail(
+      'alangomes11@gmail.com',
+      arquivo,
+      'Nota fiscal',
+    );
   }
 }

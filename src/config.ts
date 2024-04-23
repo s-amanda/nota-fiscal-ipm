@@ -23,6 +23,11 @@ export function buildConfiguration() {
       database: process.env.SOC_INTEGRATION_DB_DATABASE,
       port: Number(process.env.SOC_INTEGRATION_DB_PORT) || 1433,
     },
+    email: {
+      username: process.env.EMAIL_CAXIAS_USERNAME,
+      password: process.env.EMAIL_CAXIAS_PASSWORD,
+      servidorSmtp: process.env.EMAIL_SERVIDOR_SMTP,
+    },
   };
 }
 
