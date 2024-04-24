@@ -28,8 +28,8 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
     totalISSItens = totalISSItens + Number(servico.vISS);
     totalVRetIr = totalVRetIr + Number(servico.vRetIR);
     totalVRetPISPASEP = totalVRetPISPASEP + Number(servico.vRetPISPASEP);
-    totalVRetCOFINS = totalVRetIr + Number(servico.vRetCOFINS);
-    totalVRetCSLL = totalVRetIr + Number(servico.vRetCSLL);
+    totalVRetCOFINS = totalVRetCOFINS + Number(servico.vRetCOFINS);
+    totalVRetCSLL = totalVRetCSLL + Number(servico.vRetCSLL);
   });
 
   const total = {
