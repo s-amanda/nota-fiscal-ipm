@@ -6,15 +6,19 @@ export function formatItem(
   item: ItemNotaServico,
   empresa: Empresa,
   notaFiscal: NotaFiscal,
+  codigoIbge: string,
 ) {
-  const aliquota = notaFiscal.aliquotaIss ?? empresa.aliquotaIss;
+  const aliquotaIss = notaFiscal.aliquotaIss ?? empresa.aliquotaIss;
+  const aliquotaPis = notaFiscal.aliquotaPis ?? 0;
+  const aliquotaCsll = notaFiscal.aliquotaCsll ?? 0;
+  const aliquotaCofins = notaFiscal.aliquotaCofins ?? 0;
+  const aliquotaIr = notaFiscal.aliquotaIr ?? 0;
 
   const serv = {
     cServ: empresa.codigoServico,
     cLCServ: empresa.codigoLcServico,
-    //cLCServ: '0403',
     xServ: item.descricao ?? item.servico.descricao,
-    localTributacao: empresa.codigoMunicipioTributacao,
+    localTributacao: codigoIbge,
     localVerifResServ: 1, //Brasil
     uTrib: 'UN',
     qTrib: item.quantidade,
@@ -22,9 +26,34 @@ export function formatItem(
     vServ: (item.valorUnidade * item.quantidade).toFixed(2),
     vDesc: 0.0,
     vBCISS: (item.valorUnidade * item.quantidade).toFixed(2),
-    pISS: aliquota,
-    vISS: ((item.quantidade * item.valorUnidade * aliquota) / 100).toFixed(2),
+    pISS: aliquotaIss,
+    vISS: ((item.quantidade * item.valorUnidade * aliquotaIss) / 100).toFixed(
+      2,
+    ),
     vRed: 0.0,
+    vBCRetIR: 0.0,
+    pRetIR: aliquotaIr,
+    vRetIR: ((item.quantidade * item.valorUnidade * aliquotaIr) / 100).toFixed(
+      2,
+    ),
+    vBCCOFINS: 0.0,
+    pRetCOFINS: aliquotaCofins,
+    vRetCOFINS: (
+      (item.quantidade * item.valorUnidade * aliquotaCofins) /
+      100
+    ).toFixed(2),
+    vBCCSLL: 0.0,
+    pRetCSLL: aliquotaCsll,
+    vRetCSLL: (
+      (item.quantidade * item.valorUnidade * aliquotaCsll) /
+      100
+    ).toFixed(2),
+    vBCPISPASEP: 0.0,
+    pRetPISPASEP: aliquotaPis,
+    vRetPISPASEP: (
+      (item.quantidade * item.valorUnidade * aliquotaPis) /
+      100
+    ).toFixed(2),
   };
 
   return serv;

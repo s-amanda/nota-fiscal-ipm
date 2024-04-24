@@ -26,17 +26,12 @@ export function formatLote(
   const itens = notaFiscal.itens.map((item, index) => {
     const detalhes = {
       nItem: index + 1,
-      serv: formatItem(item, empresa, notaFiscal),
+      serv: formatItem(item, empresa, notaFiscal, codigoIbge),
     };
     return detalhes;
   });
 
-  let totalISSItens = 0;
-  itens.forEach((item) => {
-    totalISSItens = totalISSItens + Number(item.serv.vISS);
-  });
-
-  const total = formatTotal(notaFiscal, totalISSItens);
+  const total = formatTotal(notaFiscal, itens);
 
   console.log(itens);
 
@@ -54,7 +49,7 @@ export function formatLote(
         total: total,
         faturas: faturas,
         infAdicLT: empresa.codigoCidade,
-        infAdic: `Valor Aproximado de Tributos: Federais: R$ ${calculoImposto(notaFiscal).valorImpostoFederais}
+        infAdic: `${notaFiscal.obsComplementar} Valor Aproximado de Tributos: Federais: R$ ${calculoImposto(notaFiscal).valorImpostoFederais}
            (13,45%) Municipais: R$ ${calculoImposto(notaFiscal).valorImpostoMunicipais}
            (2,09%) - Fonte: IBPT/FECOMERCIO RS`,
       },

@@ -7,7 +7,7 @@ export function formatFatura(notaFiscal: NotaFiscal) {
       nItem: 1,
       nFat: 1,
       dVenc: format(new Date(), 'yyyy-MM-dd'),
-      vFat: notaFiscal.valorTotal.toFixed(2),
+      vFat: notaFiscal.valorTotalLiquido.toFixed(2),
     },
   };
 }

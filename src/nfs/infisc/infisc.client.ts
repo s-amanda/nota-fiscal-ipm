@@ -73,8 +73,6 @@ export class InfiscClient {
     const contentKey = Object.keys(jsonBody as object)[1]!;
     const content = jsonBody[contentKey] as Record<string, any>;
 
-    console.log('content', content);
-
     return { content, xml: data, requestXml };
   }
 }

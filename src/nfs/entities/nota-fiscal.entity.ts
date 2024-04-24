@@ -23,7 +23,7 @@ export class NotaFiscal {
   idEmpresa!: number;
 
   @Column({ name: 'VLR_TOTAL_NOTFIS', type: 'numeric' })
-  valorTotal!: number;
+  valorTotalLiquido!: number;
 
   @Column({ name: 'CPF_CNPJ_NOTFIS' })
   documentoTomador!: string;
@@ -64,6 +64,18 @@ export class NotaFiscal {
   @Column({ name: 'PER_ALIQUOTA_ISS_NOTFIS', type: 'numeric' })
   aliquotaIss!: number | null;
 
+  @Column({ name: 'PER_ALIQUOTA_PIS_NOTFIS', type: 'numeric' })
+  aliquotaPis!: number | null;
+
+  @Column({ name: 'PER_ALIQUOTA_CSSL_NOTFIS', type: 'numeric' })
+  aliquotaCsll!: number | null;
+
+  @Column({ name: 'PER_ALIQUOTA_COFINS_NOTFIS', type: 'numeric' })
+  aliquotaCofins!: number | null;
+
+  @Column({ name: 'PER_ALIQUOTA_IRRF_NOTFIS', type: 'numeric' })
+  aliquotaIr!: number | null;
+
   @Column({ name: 'FLG_SALVA_NOTFIS' })
   notaFiscalSalva!: string;
 
@@ -102,6 +114,9 @@ export class NotaFiscal {
 
   @Column({ name: 'VLR_CSSL_NOTFIS' })
   valorCsll!: number;
+
+  @Column({ name: 'OBS_COMPLEMENTAR_NOTFIS' })
+  obsComplementar!: string;
 
   @OneToMany(() => ItemNotaServico, (item) => item.notaFiscal)
   itens!: ItemNotaServico[];
