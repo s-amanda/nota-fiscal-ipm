@@ -37,7 +37,7 @@ export class InfiscService {
     const envioLote = formatLote(notaFiscal, codigoIbge, config);
 
     const {
-      content: { cLote: numeroLote, sit: situacao },
+      content: { cLote: numeroLote = '', sit: situacao = null } = {},
       xml: xmlRetorno,
       requestXml: xmlEnvio,
     } = (await this.infiscClient.execute('enviarLoteNotas', {
@@ -62,6 +62,10 @@ export class InfiscService {
       String(numeroLote),
       chaveAcesso,
     );
+
+    if (!numeroLote) {
+      throw new BadRequestException('Falha ao processar nota fiscal');
+    }
 
     return this.consultarNotaFiscal(notaFiscal, String(numeroLote));
   }
