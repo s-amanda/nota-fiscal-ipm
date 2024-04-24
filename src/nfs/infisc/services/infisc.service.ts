@@ -38,7 +38,8 @@ export class InfiscService {
 
     const {
       content: { cLote: numeroLote, sit: situacao },
-      xml: xmlEnvio,
+      xml: xmlRetorno,
+      requestXml: xmlEnvio,
     } = (await this.infiscClient.execute('enviarLoteNotas', {
       envioLote,
     })) as any;
@@ -49,6 +50,14 @@ export class InfiscService {
     await this.historicoNfseService.gravarHistorico(
       notaFiscal,
       xmlEnvio as string,
+      situacao === 100, //true ou false
+      String(numeroLote),
+      chaveAcesso,
+    );
+
+    await this.historicoNfseService.gravarHistorico(
+      notaFiscal,
+      xmlRetorno as string,
       situacao === 100, //true ou false
       String(numeroLote),
       chaveAcesso,

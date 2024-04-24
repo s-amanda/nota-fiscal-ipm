@@ -75,6 +75,6 @@ export class InfiscClient {
 
     console.log('content', content);
 
-    return { content, xml: data };
+    return { content, xml: data, requestXml };
   }
 }
