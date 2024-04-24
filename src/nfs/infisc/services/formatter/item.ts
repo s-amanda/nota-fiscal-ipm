@@ -24,32 +24,32 @@ export function formatItem(
     qTrib: item.quantidade,
     vUnit: item.valorUnidade.toFixed(2),
     vServ: (item.valorUnidade * item.quantidade).toFixed(2),
-    vDesc: 0.0,
+    vDesc: '0.00',
     vBCISS: (item.valorUnidade * item.quantidade).toFixed(2),
-    pISS: aliquotaIss,
+    pISS: aliquotaIss.toFixed(2),
     vISS: ((item.quantidade * item.valorUnidade * aliquotaIss) / 100).toFixed(
       2,
     ),
-    vRed: 0.0,
-    vBCRetIR: 0.0,
-    pRetIR: aliquotaIr,
+    vRed: '0.00',
+    vBCRetIR: '0.00',
+    pRetIR: aliquotaIr.toFixed(2),
     vRetIR: ((item.quantidade * item.valorUnidade * aliquotaIr) / 100).toFixed(
       2,
     ),
-    vBCCOFINS: 0.0,
-    pRetCOFINS: aliquotaCofins,
+    vBCCOFINS: '0.00',
+    pRetCOFINS: aliquotaCofins.toFixed(2),
     vRetCOFINS: (
       (item.quantidade * item.valorUnidade * aliquotaCofins) /
       100
     ).toFixed(2),
-    vBCCSLL: 0.0,
-    pRetCSLL: aliquotaCsll,
+    vBCCSLL: '0.00',
+    pRetCSLL: aliquotaCsll.toFixed(2),
     vRetCSLL: (
       (item.quantidade * item.valorUnidade * aliquotaCsll) /
       100
     ).toFixed(2),
-    vBCPISPASEP: 0.0,
-    pRetPISPASEP: aliquotaPis,
+    vBCPISPASEP: '0.00',
+    pRetPISPASEP: aliquotaPis.toFixed(2),
     vRetPISPASEP: (
       (item.quantidade * item.valorUnidade * aliquotaPis) /
       100

@@ -34,16 +34,16 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
 
   const total = {
     vServ: notaFiscal.valorServico.toFixed(2),
-    vDesc: 0.0,
+    vDesc: '0.00',
     vtNF: notaFiscal.valorServico.toFixed(2),
     vtLiq: notaFiscal.valorTotalLiquido.toFixed(2),
-    totalAproxTrib: 0.0,
+    totalAproxTrib: '0.00',
     Ret: {
-      vRetIR: totalVRetIr,
-      vRetPISPASEP: totalVRetPISPASEP,
-      vRetCOFINS: totalVRetCOFINS,
-      vRetCSLL: totalVRetCSLL,
-      vRetINSS: 0.0,
+      vRetIR: totalVRetIr.toFixed(2),
+      vRetPISPASEP: totalVRetPISPASEP.toFixed(2),
+      vRetCOFINS: totalVRetCOFINS.toFixed(2),
+      vRetCSLL: totalVRetCSLL.toFixed(2),
+      vRetINSS: '0.00',
     },
     vtLiqFaturas: notaFiscal.valorTotalLiquido.toFixed(2),
     ISS: {
