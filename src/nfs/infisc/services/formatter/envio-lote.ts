@@ -49,9 +49,10 @@ export function formatLote(
         total: total,
         faturas: faturas,
         infAdicLT: empresa.codigoCidade,
-        infAdic: `${notaFiscal.obsComplementar} Valor Aproximado de Tributos: Federais: R$ ${calculoImposto(notaFiscal).valorImpostoFederais}
-           (13,45%) Municipais: R$ ${calculoImposto(notaFiscal).valorImpostoMunicipais}
-           (2,09%) - Fonte: IBPT/FECOMERCIO RS`,
+        infAdic:
+          `${notaFiscal.obsComplementar} Valor Aproximado de Tributos: Federais: R$ ${calculoImposto(notaFiscal).valorImpostoFederais} ` +
+          `(13,45%) Municipais: R$ ${calculoImposto(notaFiscal).valorImpostoMunicipais} ` +
+          `(2,09%) - Fonte: IBPT/FECOMERCIO RS`,
       },
     },
   };
