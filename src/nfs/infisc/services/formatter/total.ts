@@ -1,19 +1,20 @@
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
 import { removeFormat } from './cpf-cnpj';
 
-export function formatTotal(notaFiscal: NotaFiscal) {
-  //const tipoPessoa = notaFiscal.pessoa.tipoPessoa;
+export function formatTotal(notaFiscal: NotaFiscal, totalISSItens: number) {
   const documentoTomador = removeFormat(
     notaFiscal.documentoTomador || '00000000000',
   );
-  const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
+  //const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
   let baseCalculo = 0.0;
 
   if (documentoTomador.length === 11 || notaFiscal.valorIss === null) {
     baseCalculo = notaFiscal.valorServico;
+    //baseCalculo = totalISSItens;
   }
 
-  const valorIss = baseCalculo * (aliquotaIss / 100);
+  //  const valorIss = baseCalculo * (aliquotaIss / 100);
+  const valorIss = totalISSItens;
 
   const total = {
     vServ: notaFiscal.valorServico.toFixed(2),

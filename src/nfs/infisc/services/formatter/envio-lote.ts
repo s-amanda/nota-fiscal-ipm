@@ -21,7 +21,6 @@ export function formatLote(
   const id = formatIdentificacao(notaFiscal, config);
   const prest = formatPrestador(empresa);
   const tomS = formatTomador(notaFiscal, codigoIbge);
-  const total = formatTotal(notaFiscal);
   const faturas = formatFatura(notaFiscal);
 
   const itens = notaFiscal.itens.map((item, index) => {
@@ -31,6 +30,14 @@ export function formatLote(
     };
     return detalhes;
   });
+
+  let totalISSItens = 0;
+  itens.forEach((item) => {
+    totalISSItens = totalISSItens + Number(item.serv.vISS);
+  });
+
+  const total = formatTotal(notaFiscal, totalISSItens);
+
   console.log(itens);
 
   const lote = {
