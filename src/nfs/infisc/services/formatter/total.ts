@@ -1,20 +1,11 @@
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
-import { removeFormat } from './cpf-cnpj';
 
 export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
-  const documentoTomador = removeFormat(
-    notaFiscal.documentoTomador || '00000000000',
-  );
-  //const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
-  let baseCalculo = 0.0;
+  let baseCalculo = notaFiscal.valorServico.toFixed(2);
 
-  if (documentoTomador.length === 11 || notaFiscal.valorIss === null) {
-    baseCalculo = notaFiscal.valorServico;
-    //baseCalculo = totalISSItens;
+  if (notaFiscal.valorIss === null) {
+    baseCalculo = '0.00';
   }
-
-  //  const valorIss = baseCalculo * (aliquotaIss / 100);
-  //const valorIss = totalISSItens;
 
   let totalISSItens = 0;
   let totalVRetIr = 0;
@@ -47,7 +38,7 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
     },
     vtLiqFaturas: notaFiscal.valorTotalLiquido.toFixed(2),
     ISS: {
-      vBCISS: baseCalculo.toFixed(2),
+      vBCISS: baseCalculo,
       vISS: totalISSItens.toFixed(2),
     },
   };
