@@ -15,7 +15,7 @@ export function formatItem(
 
   const pjComIss = notaFiscal.documentoTomador.length > 11 && aliquotaIss > 0;
 
-  const ISSST = {
+  const issst = {
     vBCST: (item.valorUnidade * item.quantidade).toFixed(2),
     pISSST: aliquotaIss.toFixed(2),
     vISSST: ((item.quantidade * item.valorUnidade * aliquotaIss) / 100).toFixed(
@@ -67,5 +67,5 @@ export function formatItem(
     ).toFixed(2),
   };
 
-  return { serv, issst: pjComIss ? ISSST : undefined };
+  return { serv, ISSST: pjComIss ? issst : undefined };
 }
