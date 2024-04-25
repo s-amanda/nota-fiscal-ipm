@@ -13,6 +13,16 @@ export function formatItem(
   const aliquotaCofins = notaFiscal.aliquotaCofins ?? 0;
   const aliquotaIr = notaFiscal.aliquotaIr ?? 0;
 
+  const pjComIss = notaFiscal.documentoTomador.length > 11 && aliquotaIss > 0;
+
+  const issst = {
+    vBCST: (item.valorUnidade * item.quantidade).toFixed(2),
+    pISSST: aliquotaIss.toFixed(2),
+    vISSST: ((item.quantidade * item.valorUnidade * aliquotaIss) / 100).toFixed(
+      2,
+    ),
+  };
+
   const serv = {
     cServ: empresa.codigoServico,
     cLCServ: empresa.codigoLcServico,
@@ -24,11 +34,13 @@ export function formatItem(
     vUnit: item.valorUnidade.toFixed(2),
     vServ: (item.valorUnidade * item.quantidade).toFixed(2),
     vDesc: '0.00',
-    vBCISS: (item.valorUnidade * item.quantidade).toFixed(2),
-    pISS: aliquotaIss.toFixed(2),
-    vISS: ((item.quantidade * item.valorUnidade * aliquotaIss) / 100).toFixed(
-      2,
-    ),
+    vBCISS: pjComIss
+      ? undefined
+      : (item.valorUnidade * item.quantidade).toFixed(2),
+    pISS: pjComIss ? undefined : aliquotaIss.toFixed(2),
+    vISS: pjComIss
+      ? undefined
+      : ((item.quantidade * item.valorUnidade * aliquotaIss) / 100).toFixed(2),
     vRed: '0.00',
     vBCRetIR: '0.00',
     pRetIR: aliquotaIr.toFixed(2),
@@ -55,5 +67,5 @@ export function formatItem(
     ).toFixed(2),
   };
 
-  return serv;
+  return { serv, issst: pjComIss ? issst : undefined };
 }
