@@ -1,6 +1,7 @@
 import { Empresa } from 'src/nfs/entities/empresa.entity';
 import { ItemNotaServico } from 'src/nfs/entities/item-nota-servico.entity';
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
+import { removeFormat } from './cpf-cnpj';
 
 export function formatItem(
   item: ItemNotaServico,
@@ -13,7 +14,9 @@ export function formatItem(
   const aliquotaCofins = notaFiscal.aliquotaCofins ?? 0;
   const aliquotaIr = notaFiscal.aliquotaIr ?? 0;
 
-  const pjComIss = notaFiscal.documentoTomador.length > 11 && aliquotaIss > 0;
+  const documento = removeFormat(notaFiscal.documentoTomador);
+
+  const pjComIss = documento.length > 11 && aliquotaIss > 0;
 
   const issst = {
     vBCST: (item.valorUnidade * item.quantidade).toFixed(2),

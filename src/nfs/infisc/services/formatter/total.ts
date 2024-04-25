@@ -1,4 +1,5 @@
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
+import { removeFormat } from './cpf-cnpj';
 
 export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
   let baseCalculo = notaFiscal.valorServico.toFixed(2);
@@ -14,8 +15,10 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
   let totalVRetCSLL = 0;
   let totalISSTItens = 0;
 
+  const documento = removeFormat(notaFiscal.documentoTomador);
+
   const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
-  const pjComIss = notaFiscal.documentoTomador.length > 11 && aliquotaIss > 0;
+  const pjComIss = documento.length > 11 && aliquotaIss > 0;
 
   itens.forEach((item) => {
     const servico = item.serv;

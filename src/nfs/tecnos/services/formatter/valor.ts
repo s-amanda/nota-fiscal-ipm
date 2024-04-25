@@ -1,8 +1,8 @@
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
+import { removeFormat } from 'src/nfs/infisc/services/formatter/cpf-cnpj';
 
 export function formatValores(notaFiscal: NotaFiscal) {
-  const documentoTomador = notaFiscal.documentoTomador;
-
+  const documentoTomador = removeFormat(notaFiscal.documentoTomador);
   const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
   let valorIss = notaFiscal.valorServico;
   let baseCalculo = 0.0;
