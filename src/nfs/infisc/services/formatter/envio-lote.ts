@@ -4,7 +4,7 @@ import { Configuration } from 'src/config';
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
 import { calculoImposto } from './calculo-imposto';
 import { removeFormat } from './cpf-cnpj';
-import { formatFatura } from './fatura';
+//import { formatFatura } from './fatura';
 import { formatIdentificacao } from './id';
 import { formatItem } from './item';
 import { formatPrestador } from './prestador';
@@ -21,7 +21,7 @@ export function formatLote(
   const id = formatIdentificacao(notaFiscal, config);
   const prest = formatPrestador(empresa);
   const tomS = formatTomador(notaFiscal, codigoIbge);
-  const faturas = formatFatura(notaFiscal);
+  // const faturas = formatFatura(notaFiscal);
 
   const itens = notaFiscal.itens.map((item, index) => {
     const detalhes = {
@@ -47,7 +47,7 @@ export function formatLote(
         TomS: tomS,
         det: itens,
         total: total,
-        faturas: faturas,
+        //faturas: faturas,
         infAdicLT: empresa.codigoCidade,
         infAdic:
           `${notaFiscal.obsComplementar} Valor Aproximado de Tributos: Federais: R$ ${calculoImposto(notaFiscal).valorImpostoFederais} ` +
