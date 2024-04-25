@@ -12,13 +12,14 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
   let totalVRetPISPASEP = 0;
   let totalVRetCOFINS = 0;
   let totalVRetCSLL = 0;
+  let totalISSTItens = 0;
 
   const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
   const pjComIss = notaFiscal.documentoTomador.length > 11 && aliquotaIss > 0;
 
   itens.forEach((item) => {
     const servico = item.serv;
-    const ISSST = item.ISSST;
+    const issst = item.ISSST;
 
     totalISSItens = totalISSItens + Number(servico.vISS);
     totalVRetIr = totalVRetIr + Number(servico.vRetIR);
@@ -27,7 +28,7 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
     totalVRetCSLL = totalVRetCSLL + Number(servico.vRetCSLL);
 
     if (pjComIss) {
-      totalISSItens = totalISSItens + Number(ISSST.vISSST);
+      totalISSTItens = totalISSTItens + Number(issst.vISSST);
     }
   });
 
@@ -47,7 +48,9 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
     vtLiqFaturas: notaFiscal.valorTotalLiquido.toFixed(2),
     ISS: {
       [pjComIss ? 'vBCSTISS' : 'vBCISS']: baseCalculo,
-      [pjComIss ? 'vSTISS' : 'vISS']: totalISSItens.toFixed(2),
+      [pjComIss ? 'vSTISS' : 'vISS']: pjComIss
+        ? totalISSTItens.toFixed(2)
+        : totalISSItens.toFixed(2),
     },
   };
 
