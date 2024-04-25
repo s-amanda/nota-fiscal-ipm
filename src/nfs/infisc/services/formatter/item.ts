@@ -8,7 +8,8 @@ export function formatItem(
   empresa: Empresa,
   notaFiscal: NotaFiscal,
 ) {
-  const aliquotaIss = notaFiscal.aliquotaIss ?? empresa.aliquotaIss;
+  const valorIss = notaFiscal.valorIss ?? 0;
+  const aliquotaIss = notaFiscal.aliquotaIss ?? 0;
   const aliquotaPis = notaFiscal.aliquotaPis ?? 0;
   const aliquotaCsll = notaFiscal.aliquotaCsll ?? 0;
   const aliquotaCofins = notaFiscal.aliquotaCofins ?? 0;
@@ -16,7 +17,7 @@ export function formatItem(
 
   const documento = removeFormat(notaFiscal.documentoTomador);
 
-  const pjComIss = documento.length > 11 && aliquotaIss > 0;
+  const pjComIss = documento.length > 11 && valorIss > 0;
 
   const issst = {
     vBCST: (item.valorUnidade * item.quantidade).toFixed(2),
