@@ -51,7 +51,7 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
     },
     vtLiqFaturas: notaFiscal.valorTotalLiquido.toFixed(2),
     ISS: {
-      [pjComIss ? 'vBCSTISS' : 'vBCISS']: baseCalculo,
+      [pjComIss ? 'vBCSTISS' : 'vBCISS']: baseCalculo.toFixed(2),
       [pjComIss ? 'vSTISS' : 'vISS']: pjComIss
         ? totalISSTItens.toFixed(2)
         : totalISSItens.toFixed(2),
