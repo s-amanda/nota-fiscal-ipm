@@ -143,6 +143,10 @@ export class NotaFiscalService {
       .select('MAX(notaFiscal.numero)', 'numero')
       .innerJoin('notaFiscal.empresa', 'empresa')
       .where('empresa.id = :idEmpresa', { idEmpresa })
+      .andWhere(
+        `(notaFiscal.notaFiscalImpressa = 'S' or notaFiscal.notaFiscalImpressa = 'A')`,
+      )
+      .andWhere('notaFiscal.numeroLote is not null')
       .getRawOne();
 
     return (numero + 1) as number;
