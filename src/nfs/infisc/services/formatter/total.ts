@@ -2,10 +2,14 @@ import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
 import { removeFormat } from './cpf-cnpj';
 
 export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
-  let baseCalculo = notaFiscal.valorServico.toFixed(2);
+  const documentoTomador = removeFormat(
+    notaFiscal.documentoTomador || '00000000000',
+  );
 
-  if (notaFiscal.valorIss === null) {
-    baseCalculo = '0.00';
+  let baseCalculo = 0.0;
+
+  if (documentoTomador.length === 11 || notaFiscal.valorIss === null) {
+    baseCalculo = notaFiscal.valorServico;
   }
 
   let totalISSItens = 0;
@@ -13,28 +17,14 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
   let totalVRetPISPASEP = 0;
   let totalVRetCOFINS = 0;
   let totalVRetCSLL = 0;
-  let totalISSTItens = 0;
-
-  const documento = removeFormat(notaFiscal.documentoTomador);
-
-  const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
-  const pjComIss = documento.length > 11 && aliquotaIss > 0;
-
   itens.forEach((item) => {
     const servico = item.serv;
-    const issst = item.ISSST;
-
     totalISSItens = totalISSItens + Number(servico.vISS);
     totalVRetIr = totalVRetIr + Number(servico.vRetIR);
     totalVRetPISPASEP = totalVRetPISPASEP + Number(servico.vRetPISPASEP);
     totalVRetCOFINS = totalVRetCOFINS + Number(servico.vRetCOFINS);
     totalVRetCSLL = totalVRetCSLL + Number(servico.vRetCSLL);
-
-    if (pjComIss) {
-      totalISSTItens = totalISSTItens + Number(issst.vISSST);
-    }
   });
-
   const total = {
     vServ: notaFiscal.valorServico.toFixed(2),
     vDesc: '0.00',
@@ -50,10 +40,8 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
     },
     vtLiqFaturas: notaFiscal.valorTotalLiquido.toFixed(2),
     ISS: {
-      [pjComIss ? 'vBCSTISS' : 'vBCISS']: baseCalculo,
-      [pjComIss ? 'vSTISS' : 'vISS']: pjComIss
-        ? totalISSTItens.toFixed(2)
-        : totalISSItens.toFixed(2),
+      vBCISS: baseCalculo.toFixed(2),
+      vISS: totalISSItens.toFixed(2),
     },
   };
 
