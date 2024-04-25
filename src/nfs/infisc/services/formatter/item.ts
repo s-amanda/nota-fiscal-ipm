@@ -6,7 +6,6 @@ export function formatItem(
   item: ItemNotaServico,
   empresa: Empresa,
   notaFiscal: NotaFiscal,
-  codigoIbge: string,
 ) {
   const aliquotaIss = notaFiscal.aliquotaIss ?? empresa.aliquotaIss;
   const aliquotaPis = notaFiscal.aliquotaPis ?? 0;
@@ -18,7 +17,7 @@ export function formatItem(
     cServ: empresa.codigoServico,
     cLCServ: empresa.codigoLcServico,
     xServ: item.descricao ?? item.servico.descricao,
-    localTributacao: codigoIbge,
+    localTributacao: empresa.codigoCidade,
     localVerifResServ: 1, //Brasil
     uTrib: 'UN',
     qTrib: item.quantidade,

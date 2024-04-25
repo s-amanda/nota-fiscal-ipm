@@ -26,7 +26,7 @@ export function formatLote(
   const itens = notaFiscal.itens.map((item, index) => {
     const detalhes = {
       nItem: index + 1,
-      serv: formatItem(item, empresa, notaFiscal, codigoIbge),
+      serv: formatItem(item, empresa, notaFiscal),
     };
     return detalhes;
   });
