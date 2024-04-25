@@ -20,7 +20,7 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
   let totalISSTItens = 0;
 
   const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
-  const pjComIss = notaFiscal.documentoTomador.length > 11 && aliquotaIss > 0;
+  const pjComIss = documentoTomador.length > 11 && aliquotaIss > 0;
 
   itens.forEach((item) => {
     const servico = item.serv;
