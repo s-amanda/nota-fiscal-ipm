@@ -34,7 +34,7 @@ export class EmailService {
           content: anexo,
         },
       ],
-      //text: 'Hello world?',
+      text: 'Foi emitida uma Nota Fiscal de Serviços eletrônica em seu nome pelo prestador de serviços: Alfa Laboratório\n\nEsta é uma mensagem automática, favor não responder. Em caso de dúvida entrar em contato diretamente com o prestador de serviço.',
     });
   }
 }
