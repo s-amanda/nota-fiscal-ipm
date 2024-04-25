@@ -9,7 +9,7 @@ export function formatItem(
   notaFiscal: NotaFiscal,
 ) {
   const valorIss = notaFiscal.valorIss ?? 0;
-  const aliquotaIss = notaFiscal.aliquotaIss ?? 0;
+  const aliquotaIss = notaFiscal.aliquotaIss ?? empresa.aliquotaIss;
   const aliquotaPis = notaFiscal.aliquotaPis ?? 0;
   const aliquotaCsll = notaFiscal.aliquotaCsll ?? 0;
   const aliquotaCofins = notaFiscal.aliquotaCofins ?? 0;
