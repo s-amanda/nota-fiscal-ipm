@@ -6,18 +6,12 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
     notaFiscal.documentoTomador || '00000000000',
   );
 
-  let baseCalculo = 0.0;
-
-  if (documentoTomador.length === 11 || notaFiscal.valorIss === null) {
-    baseCalculo = notaFiscal.valorServico;
-  }
-
   let totalISSItens = 0;
   let totalVRetIr = 0;
   let totalVRetPISPASEP = 0;
   let totalVRetCOFINS = 0;
   let totalVRetCSLL = 0;
-  let totalISSTItens = 0;
+  let totalBaseCalculoItens = 0;
 
   const valorIss = notaFiscal.valorIss ?? 0;
   const pjComIss = documentoTomador.length > 11 && valorIss > 0;
@@ -26,14 +20,17 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
     const servico = item.serv;
     const issst = item.ISSST;
 
-    totalISSItens = totalISSItens + Number(servico.vISS);
     totalVRetIr = totalVRetIr + Number(servico.vRetIR);
     totalVRetPISPASEP = totalVRetPISPASEP + Number(servico.vRetPISPASEP);
     totalVRetCOFINS = totalVRetCOFINS + Number(servico.vRetCOFINS);
     totalVRetCSLL = totalVRetCSLL + Number(servico.vRetCSLL);
 
     if (pjComIss) {
-      totalISSTItens = totalISSTItens + Number(issst.vISSST);
+      totalISSItens = totalISSItens + Number(issst.vISSST);
+      totalBaseCalculoItens = totalBaseCalculoItens + Number(issst.vBCST);
+    } else {
+      totalBaseCalculoItens = totalBaseCalculoItens + Number(servico.vBCISS);
+      totalISSItens = totalISSItens + Number(servico.vISS);
     }
   });
   const total = {
@@ -51,10 +48,8 @@ export function formatTotal(notaFiscal: NotaFiscal, itens: Array<any>) {
     },
     vtLiqFaturas: notaFiscal.valorTotalLiquido.toFixed(2),
     ISS: {
-      [pjComIss ? 'vBCSTISS' : 'vBCISS']: baseCalculo.toFixed(2),
-      [pjComIss ? 'vSTISS' : 'vISS']: pjComIss
-        ? totalISSTItens.toFixed(2)
-        : totalISSItens.toFixed(2),
+      [pjComIss ? 'vBCSTISS' : 'vBCISS']: totalBaseCalculoItens.toFixed(2),
+      [pjComIss ? 'vSTISS' : 'vISS']: totalISSItens.toFixed(2),
     },
   };
 
