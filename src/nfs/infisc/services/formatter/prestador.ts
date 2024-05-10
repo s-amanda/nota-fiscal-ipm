@@ -18,7 +18,7 @@ export function formatPrestador(empresa: Empresa) {
       cMun: empresa.codigoCidade,
       xMun: empresa.cidade,
       UF: empresa.uf,
-      CEP: empresa.cep.replace(/-/g, ''),
+      CEP: empresa.cep.replace(/-/g, '').trim(),
       cPais: 1058,
       xPais: 'BRASIL',
     },

@@ -17,7 +17,7 @@ export function formatTomador(notaFiscal: NotaFiscal, codigoIbge: string) {
       cMun: codigoIbge,
       xMun: notaFiscal.cidade,
       UF: notaFiscal.uf,
-      CEP: String(notaFiscal.cep).replace(/-/g, ''),
+      CEP: String(notaFiscal.cep).replace(/-/g, '').trim(),
       cPais: 1058,
       xPais: 'BRASIL',
     },
