@@ -1,5 +1,5 @@
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
-import { removeFormat } from 'src/nfs/infisc/services/formatter/cpf-cnpj';
+import { removeFormat } from 'src/nfs/infisc/formatter/cpf-cnpj';
 
 export function formatPrestador(notaFiscal: NotaFiscal) {
   const empresa = notaFiscal.empresa;

@@ -1,7 +1,6 @@
-import { ConfigService } from '@nestjs/config';
 import format from 'date-fns/format';
-import { Configuration } from 'src/config';
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
+import { NfseEnvironment } from 'src/nfs/enums/environment.enum';
 import { calculoImposto } from './calculo-imposto';
 import { removeFormat } from './cpf-cnpj';
 //import { formatFatura } from './fatura';
@@ -14,11 +13,11 @@ import { formatTotal } from './total';
 export function formatLote(
   notaFiscal: NotaFiscal,
   codigoIbge: string,
-  config: ConfigService<Configuration>,
+  environment: NfseEnvironment,
 ) {
   const empresa = notaFiscal.empresa;
 
-  const id = formatIdentificacao(notaFiscal, config);
+  const id = formatIdentificacao(notaFiscal, environment);
   const prest = formatPrestador(empresa);
   const tomS = formatTomador(notaFiscal, codigoIbge);
   // const faturas = formatFatura(notaFiscal);
@@ -32,8 +31,6 @@ export function formatLote(
   });
 
   const total = formatTotal(notaFiscal, itens);
-
-  console.log(itens);
 
   const lote = {
     '@versao': '1.0',

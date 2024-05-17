@@ -3,18 +3,24 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mutex } from 'async-mutex';
 import format from 'date-fns/format';
-import { Configuration } from 'src/config';
 import { Repository } from 'typeorm';
+import { ClientError } from '../client/response';
 import { Cidade } from '../entities/cidade.entity';
 import { NotaFiscal } from '../entities/nota-fiscal.entity';
 import { MotivoCancelamento } from '../enums/motivo-cancelamento.enum';
 import { NotaJaCanceladaException } from '../exceptions/nota-ja-cancelada';
-import { InfiscService } from '../infisc/services/infisc.service';
+import { EmailService } from './email.service';
+import { HistoricoNfseService } from './historico-nfse.service';
+import { NfseStrategyProvider } from './nfse.strategy';
 
+/*
+  Classe que gerencia as notas fiscais em nível mais alto, sem diferenciar provedores.
+  Os detalhes de cada provedor são definidos dentro do strategy.
+  Aqui ficam regras que são gerais para todos os provedores e cidades, como gravar resultados no banco de dados.
+*/
 @Injectable()
 export class NotaFiscalService {
   private mutex = new Mutex();
@@ -24,17 +30,18 @@ export class NotaFiscalService {
     private notaFiscalRepository: Repository<NotaFiscal>,
     @InjectRepository(Cidade)
     private cidadeRepository: Repository<Cidade>,
-    private infiscService: InfiscService,
-    private config: ConfigService<Configuration>,
+    private emailService: EmailService,
+    private strategyProvider: NfseStrategyProvider,
+    private historicoNfseService: HistoricoNfseService,
   ) {}
 
   async enviarNotaFiscal(id: number) {
     return this.mutex.runExclusive(async () => {
       const notaFiscal = await this.buscarNotaFiscal(id);
       if (notaFiscal.notaFiscalSalva === 'S') {
-        throw new BadRequestException('Essa nota fiscal já foi enviada');
+        throw new BadRequestException('A nota fiscal já foi enviada');
       }
-      //
+
       notaFiscal.numero = await this.buscarNumeroNotaEmpresa(notaFiscal);
 
       const codigoIbge = await this.getCodigoIbge(
@@ -42,11 +49,30 @@ export class NotaFiscalService {
         notaFiscal.uf,
       );
 
+      const strategy = this.strategyProvider.getStrategy(notaFiscal);
+
       try {
-        const envio = await this.infiscService.enviarNotaFiscal(
-          notaFiscal,
+        const {
+          id: idNotaGerada,
+          protocolo,
+          response,
+        } = await strategy.enviarNotaFiscal(notaFiscal, {
           codigoIbge,
-          this.config,
+        });
+
+        await this.historicoNfseService.gravarHistorico(
+          notaFiscal,
+          response.rawRequest,
+          true,
+          protocolo,
+          idNotaGerada,
+        );
+        await this.historicoNfseService.gravarHistorico(
+          notaFiscal,
+          response.rawResponse,
+          true,
+          protocolo,
+          idNotaGerada,
         );
 
         await this.notaFiscalRepository.update(
@@ -58,17 +84,32 @@ export class NotaFiscalService {
             sucesso: 'S',
             numeroLote: notaFiscal.numero,
             numeroRps: notaFiscal.numero,
+            numeroLoteRps: idNotaGerada,
           },
         );
 
         if (notaFiscal.email) {
-          this.infiscService
-            .enviarEmailNotaFiscal(notaFiscal)
-            .catch(console.error);
+          this.enviarEmailNotaFiscal(notaFiscal).catch(console.error);
         }
 
-        return envio;
+        return { id: idNotaGerada };
       } catch (error) {
+        if (error instanceof ClientError) {
+          await this.historicoNfseService.gravarHistorico(
+            notaFiscal,
+            error.rawRequest,
+            false,
+            null,
+            null,
+          );
+          await this.historicoNfseService.gravarHistorico(
+            notaFiscal,
+            error.rawResponse,
+            false,
+            null,
+            null,
+          );
+        }
         await this.notaFiscalRepository.update({ id }, { sucesso: 'N' });
         throw error;
       }
@@ -78,28 +119,23 @@ export class NotaFiscalService {
   async gerarPdf(id: number) {
     const notaFiscal = await this.buscarNotaFiscal(id);
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!notaFiscal) {
-      throw new NotFoundException('Nota fiscal não encontrada');
-    }
-
-    const pdf = await this.infiscService.gerarPdf(notaFiscal);
+    const strategy = this.strategyProvider.getStrategy(notaFiscal);
+    const pdf = await strategy.gerarPdf(notaFiscal);
 
     await this.notaFiscalRepository.update(
       { id: id },
       { notaFiscalImpressa: 'S' },
     );
-
     return pdf;
   }
 
   async cancelarNotaFiscal(id: number, motivo: MotivoCancelamento) {
     const notaFiscal = await this.buscarNotaFiscal(id);
-
     if (notaFiscal.notaFiscalImpressa === 'A') {
       throw new NotaJaCanceladaException();
     }
 
+    const strategy = this.strategyProvider.getStrategy(notaFiscal);
     await this.notaFiscalRepository.update(
       { id },
       {
@@ -107,8 +143,7 @@ export class NotaFiscalService {
         notaFiscalImpressa: 'A',
       },
     );
-
-    return this.infiscService.cancelarNotaFiscal(notaFiscal, motivo);
+    await strategy.cancelarNotaFiscal(notaFiscal, motivo);
   }
 
   private async buscarNotaFiscal(id: number) {
@@ -135,7 +170,7 @@ export class NotaFiscalService {
     return codigoIbge as string;
   }
 
-  async buscarNumeroNotaEmpresa(notaFiscal: NotaFiscal) {
+  private async buscarNumeroNotaEmpresa(notaFiscal: NotaFiscal) {
     const idEmpresa = notaFiscal.empresa.id;
 
     const { numero } = await this.notaFiscalRepository
@@ -150,5 +185,15 @@ export class NotaFiscalService {
       .getRawOne();
 
     return (numero + 1) as number;
+  }
+
+  private async enviarEmailNotaFiscal(notaFiscal: NotaFiscal) {
+    const pdf = await this.gerarPdf(notaFiscal.id);
+
+    await this.emailService.sendEmail(
+      notaFiscal.email,
+      pdf,
+      'Nota Fiscal de Serviço Eletrônica',
+    );
   }
 }

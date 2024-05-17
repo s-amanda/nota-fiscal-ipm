@@ -18,15 +18,9 @@ export class NfseController {
     return this.nfseService.enviarNotaFiscal(Number(id));
   }
 
-  // @Get(':id')
-  // consultarNotaFiscal(@Param('id') id: number) {
-  //   // id => recebe string e converte pra numero
-  //   return this.nfseService.consultarNotaFiscal(id);
-  // }
-
   @Get(':id/pdf')
-  async gerarNotaFiscal(@Param('id') id: number) {
-    return new StreamableFile(await this.nfseService.gerarPdf(id));
+  async gerarNotaFiscal(@Param('id') id: string) {
+    return new StreamableFile(await this.nfseService.gerarPdf(Number(id)));
   }
 
   @Delete(':id')

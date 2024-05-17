@@ -115,6 +115,9 @@ export class NotaFiscal {
   @Column({ name: 'VLR_CSSL_NOTFIS' })
   valorCsll!: number;
 
+  @Column({ name: 'NUM_LOTE_RPS' })
+  numeroLoteRps!: string;
+
   @Column({ name: 'OBS_COMPLEMENTAR_NOTFIS' })
   obsComplementar!: string;
 

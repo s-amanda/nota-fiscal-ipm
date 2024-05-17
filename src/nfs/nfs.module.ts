@@ -10,11 +10,10 @@ import { NotaFiscal } from './entities/nota-fiscal.entity';
 import { Pessoa } from './entities/pessoa.entity';
 import { Servico } from './entities/servico.entity';
 import { Uf } from './entities/uf.entity';
-import { InfiscClient } from './infisc/infisc.client';
-import { InfiscService } from './infisc/services/infisc.service';
 import { EmailService } from './services/email.service';
 import { HistoricoNfseService } from './services/historico-nfse.service';
 import { NotaFiscalService } from './services/nfse.service';
+import { NfseStrategyProvider } from './services/nfse.strategy';
 
 @Module({
   imports: [
@@ -31,11 +30,12 @@ import { NotaFiscalService } from './services/nfse.service';
     ]),
   ],
   providers: [
-    InfiscClient,
-    InfiscService,
+    // InfiscClient,
+    // InfiscService,
     NotaFiscalService,
     HistoricoNfseService,
     EmailService,
+    NfseStrategyProvider,
   ],
   controllers: [NfseController],
 })

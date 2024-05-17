@@ -1,11 +1,12 @@
 import format from 'date-fns/format';
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
+import { calculoImposto } from 'src/nfs/infisc/formatter/calculo-imposto';
 import { formatPrestador } from './prestador';
 import { formatRps } from './rps';
 import { formatServico } from './servico';
 import { formatTomador } from './tomador';
 
-export function formatInfDecPrestacaoServico(
+export function formatInfoPrestacaoServico(
   notaFiscal: NotaFiscal,
   codigoIbge: string,
 ) {
@@ -13,10 +14,9 @@ export function formatInfDecPrestacaoServico(
 
   return {
     // "@xmlns": "http://www.abrasf.org.br/nfse.xsd/",
-    '@Id': 'R12024886592890001040000000000000001',
     Rps: formatRps(notaFiscal),
-    Competencia: format(new Date(), 'yyyy-MM-ddTHH:mm:ss'),
-    Servico: formatServico(notaFiscal),
+    Competencia: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+    Servico: { tcDadosServico: formatServico(notaFiscal) },
     Prestador: formatPrestador(notaFiscal),
     Tomador: formatTomador(notaFiscal, codigoIbge),
     Intermediario: {
@@ -29,20 +29,14 @@ export function formatInfDecPrestacaoServico(
       : empresa.naturezaOperacao,
     OptanteSimplesNacional: empresa.simplesNacional === 'S' ? 1 : 2,
     IncentivoFiscal: '2', //Não
-
-    //PercentualCargaTributaria: '13.45',
-    ValorCargaTributaria: '0.95',
+    PercentualCargaTributaria: '13.45',
+    ValorCargaTributaria: calculoImposto(notaFiscal).valorImpostoFederais,
     PercentualCargaTributariaMunicipal: '2.09',
-    ValorCargaTributariaMunicipal: '0.15',
+    ValorCargaTributariaMunicipal:
+      calculoImposto(notaFiscal).valorImpostoMunicipais,
     PercentualCargaTributariaEstadual: '0',
     ValorCargaTributariaEstadual: '0',
-    OutrasInformacoes: 'Pagamento a Vista',
-    TipoNota: '0',
-    SiglaUF: 'RS',
-    IdCidade: '4319000',
-    EspecieDocumento: '0',
-    SerieTalonario: '0',
-    FormaPagamento: '1',
-    NumeroParcelas: '0',
+    SiglaUF: empresa.uf,
+    IdCidade: empresa.codigoCidade,
   };
 }

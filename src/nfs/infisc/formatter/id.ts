@@ -1,12 +1,11 @@
-import { ConfigService } from '@nestjs/config';
 import format from 'date-fns/format';
-import { Configuration } from 'src/config';
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
+import { NfseEnvironment } from 'src/nfs/enums/environment.enum';
 import { gerarChaveAcesso } from './chave-acesso';
 
 export function formatIdentificacao(
   notaFiscal: NotaFiscal,
-  config: ConfigService<Configuration>,
+  environment: NfseEnvironment,
 ) {
   const data = format(new Date(), 'yyyy-MM-dd');
   const hora = format(new Date(), 'HH:mm');
@@ -24,9 +23,7 @@ export function formatIdentificacao(
     tpEmis: 'N',
     cancelada: 'N',
     canhoto: 0,
-    ambienteEmi: config.getOrThrow('nfse.caxias.ambiente', {
-      infer: true,
-    }), //hml
+    ambienteEmi: environment === NfseEnvironment.PRODUCTION ? 1 : 2,
     formaEmi: 2,
     empreitadaGlobal: 2,
   };

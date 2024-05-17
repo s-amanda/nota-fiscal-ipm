@@ -1,5 +1,5 @@
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
-import { removeFormat } from 'src/nfs/infisc/services/formatter/cpf-cnpj';
+import { removeFormat } from 'src/nfs/infisc/formatter/cpf-cnpj';
 
 export function formatTomador(notaFiscal: NotaFiscal, codigoIbge: string) {
   const numeroDocumento = removeFormat(
@@ -22,7 +22,7 @@ export function formatTomador(notaFiscal: NotaFiscal, codigoIbge: string) {
       CodigoMunicipio: codigoIbge,
       Uf: notaFiscal.uf,
       CodigoPais: '1058',
-      Cep: String(notaFiscal.cep).replace(/-/g, ''),
+      Cep: String(notaFiscal.cep).replace(/-/g, '').trim(),
     },
     Contato: {
       Telefone: notaFiscal.telefone,

@@ -1,78 +1,162 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
-import fs from 'fs/promises';
-import { Configuration } from 'src/config';
 import { create } from 'xmlbuilder2';
+import { ClientError, ClientResponse } from '../client/response';
+import { SoapClient } from '../client/soap-client';
+import { toArray } from '../utils/array';
 import { getKeyFromCertificate } from '../utils/certificate';
-import { sign } from '../utils/signature';
+import { signXml } from '../utils/signature';
+import { NotaComCriticaException } from './exceptions/nota-com-critica';
+import { NotaEmProcessamentoException } from './exceptions/nota-em-processamento';
 
-@Injectable()
+enum CodigoSituacao {
+  EM_PROCESSAMENTO = 217,
+  ERRO = 200,
+  SUCESSO = 100,
+}
+
+interface InfiscClientOptions {
+  endpoint: string;
+  certificateFile: string;
+  certificatePassword: string;
+}
+
+interface MethodParameters {
+  method: string;
+  parameters: object;
+}
+
+/* 
+  Classe responsável por se comunicar com os serviços do Infisc e fazer tratamento de erros
+*/
 export class InfiscClient {
-  constructor(private readonly config: ConfigService<Configuration>) {}
+  private readonly soap;
+  private readonly certificate;
+  private readonly privateKey;
 
-  async execute(method: string, documentData: object) {
+  constructor(options: InfiscClientOptions) {
+    this.soap = new SoapClient({
+      endpoint: options.endpoint,
+      namespace: 'env',
+    });
+
+    const { cert, key } = getKeyFromCertificate(
+      options.certificateFile,
+      options.certificatePassword,
+    );
+    this.certificate = cert;
+    this.privateKey = key;
+  }
+
+  async enviarLoteNotas(xml: object) {
+    const response = await this.execute({
+      method: 'enviarLoteNotas',
+      parameters: xml,
+    });
+
+    const { cLote: numeroLote, sit: situacao } = response.data;
+    if (situacao !== CodigoSituacao.SUCESSO) {
+      throw new ClientError(
+        'Falha ao enviar NFSe',
+        response.rawRequest,
+        response.rawResponse,
+      );
+    }
+    return new ClientResponse(
+      String(numeroLote),
+      response.rawRequest,
+      response.rawResponse,
+    );
+  }
+
+  async obterCriticaLote(xml: object) {
+    const response = await this.execute({
+      method: 'obterCriticaLote',
+      parameters: xml,
+    });
+    const { NFSe } = response.data;
+    if (NFSe.sit === CodigoSituacao.SUCESSO) {
+      return response;
+    } else if (NFSe.sit === CodigoSituacao.ERRO) {
+      throw new NotaComCriticaException(
+        toArray(NFSe.motivos).flatMap(({ mot }) => mot as string),
+        response.rawRequest,
+        response.rawResponse,
+      );
+    }
+    throw new NotaEmProcessamentoException(
+      response.rawRequest,
+      response.rawRequest,
+    );
+  }
+
+  async cancelarNotaFiscal(xml: object) {
+    const response = await this.execute({
+      method: 'cancelarNotaFiscal',
+      parameters: xml,
+    });
+    const { sit: situacao } = response.data;
+    if (situacao !== CodigoSituacao.SUCESSO) {
+      throw new ClientError(
+        'Falha ao cancelar NFSe',
+        response.rawRequest,
+        response.rawResponse,
+      );
+    }
+    return response;
+  }
+
+  async obterNotasEmPNG(xml: object) {
+    const response = await this.execute({
+      method: 'obterNotasEmPNG',
+      parameters: xml,
+    });
+    const { 'NFS-ePNG': base64 } = response.data;
+    return Buffer.from(base64 as string, 'base64');
+  }
+
+  private async execute({ method, parameters }: MethodParameters) {
     //transforma o objeto para xml
-    const doc = create(documentData);
-    const xml = doc.end({ prettyPrint: true, headless: true });
-
-    //le o conteudo do certificado e converte para o formato aceito pela biblioteca de assinatura
-    // const certificateFile = await fs.readFile('certificadoalfa.pfx', 'base64');
-    // const { cert, key } = getKeyFromCertificate(certificateFile);
-    const certificate = this.config.getOrThrow('nfse.caxias.certificate', {
-      infer: true,
+    const parametersXml = create(parameters).end({
+      prettyPrint: true,
+      headless: true,
     });
-    const certificateFile = await fs.readFile(certificate, 'base64');
-    const { cert, key } = getKeyFromCertificate(certificateFile);
 
+    const rootElement = Object.keys(parameters)[0]!;
     //assina o xml
-    const signed = sign(xml, key, cert, Object.keys(documentData)[0]!);
-
-    //adiciona os dados no objeto com o xml completo
-    const signedXml = {
-      'soapenv:Envelope': {
-        '@xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/',
-        '@xmlns:xsd': 'http://www.w3.org/2001/XMLSchema',
-        '@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-        'soapenv:Body': {
-          [`ns1:${method}`]: {
-            '@soapenv:encodingStyle':
-              'http://schemas.xmlsoap.org/soap/encoding/',
-            '@xmlns:ns1': 'http://ws.pc.gif.com.br/',
-            xml: signed,
-          },
-        },
-      },
-    };
-
-    //converte o objeto com xml para xml
-    const requestXml = create(signedXml).end({ prettyPrint: true });
-
-    //envia o xml para consulta e retorna o campo 'data' do objeto com o resultado
-    const { data } = await axios({
-      method: 'post',
-      url: this.config.getOrThrow('nfse.caxias.endpoint', {
-        infer: true,
-      }),
-      data: Buffer.from(requestXml),
-      headers: { 'Content-Type': false },
+    const signedXml = signXml({
+      xml: parametersXml,
+      certificate: this.certificate,
+      privateKey: this.privateKey,
+      signedElement: rootElement,
+      signatureLocation: 'append',
     });
 
-    //converte o valor do campo 'data' de string para xml
+    const response = await this.soap.execute({
+      [`ns1:${method}`]: {
+        '@xmlns:ns1': 'http://ws.pc.gif.com.br/',
+        xml: signedXml,
+      },
+    });
+
+    const { return: bodyXml } = Object.values(response.data)[0]!;
     const parser = new XMLParser();
-    const envelope = parser.parse(data as string);
+    const body = parser.parse(bodyXml as string);
 
-    //acessa o body
-    const envelopeBody = envelope['env:Envelope']['env:Body'];
-
-    const envelopeKey = Object.keys(envelopeBody as object)[0]!;
-    const xmlBody = envelopeBody[envelopeKey].return;
-    const jsonBody = parser.parse(xmlBody as string);
-
-    const contentKey = Object.keys(jsonBody as object)[1]!;
-    const content = jsonBody[contentKey] as Record<string, any>;
-
-    return { content, xml: data, requestXml };
+    const envelopeKey = Object.keys(body as object)[1]!;
+    if (!body[envelopeKey] && body['SOAP-ENV:Envelope']) {
+      // Não possui retorno comum, portanto é um erro de validação do formato do XML
+      const { faultstring } =
+        body['SOAP-ENV:Envelope']['SOAP-ENV:Body']['SOAP-ENV:Fault'];
+      throw new ClientError(
+        faultstring as string,
+        response.rawRequest,
+        response.rawResponse,
+      );
+    }
+    return new ClientResponse(
+      body[envelopeKey] ?? {},
+      response.rawRequest,
+      response.rawResponse,
+    );
   }
 }

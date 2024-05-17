@@ -18,7 +18,6 @@ export class HistoricoNfseService {
       .select('MAX(historico.id)', 'id')
       .getRawOne();
 
-    console.log(historico);
     return (historico.id as number | null) ?? 1;
   }
 
@@ -26,8 +25,8 @@ export class HistoricoNfseService {
     notaFiscal: NotaFiscal,
     xml: string,
     situacao: boolean,
-    numeroProtoloco: string,
-    chaveAcesso: string,
+    numeroProtocolo: string | null,
+    chaveAcesso: string | null,
   ) {
     return this.historicoRepository.insert({
       id: Number(await this.getHistoricoId()) + 1,
@@ -36,7 +35,7 @@ export class HistoricoNfseService {
       idNotaFiscal: notaFiscal.id,
       data: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
       status: situacao ? 1 : 3,
-      protocolo: numeroProtoloco,
+      protocolo: numeroProtocolo,
       chaveAcesso: chaveAcesso,
       //user: '12',
     });

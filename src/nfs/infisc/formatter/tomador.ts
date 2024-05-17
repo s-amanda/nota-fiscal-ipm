@@ -2,9 +2,7 @@ import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
 import { removeFormat } from './cpf-cnpj';
 
 export function formatTomador(notaFiscal: NotaFiscal, codigoIbge: string) {
-  const numeroDocumento = removeFormat(
-    notaFiscal.documentoTomador || '00000000000',
-  );
+  const numeroDocumento = removeFormat(notaFiscal.documentoTomador || '');
 
   const tomS = {
     [numeroDocumento.length > 11 ? 'CNPJ' : 'CPF']: numeroDocumento,
