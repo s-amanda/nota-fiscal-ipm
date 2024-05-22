@@ -38,6 +38,7 @@ function validateEnvironment(value: string | undefined) {
 export function buildConfiguration() {
   return {
     soc: {
+      enabled: !!process.env.SOC_INTEGRATION_ENDPOINT,
       endpoint: process.env.SOC_INTEGRATION_ENDPOINT,
       username: process.env.SOC_INTEGRATION_USERNAME,
       password: process.env.SOC_INTEGRATION_PASSWORD,

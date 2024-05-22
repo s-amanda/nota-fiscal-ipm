@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Mutex } from 'async-mutex';
+import { Configuration } from 'src/config';
 import { QueueService } from 'src/soc/queue.service';
 
 @Injectable()
@@ -9,11 +11,15 @@ export class FileQueue {
 
   private readonly lock = new Mutex();
 
-  constructor(private readonly queue: QueueService) {}
+  constructor(
+    private readonly queue: QueueService,
+    private readonly config: ConfigService<Configuration>,
+  ) {}
 
   @Cron(CronExpression.EVERY_MINUTE)
   async uploadFilesQueue() {
-    if (this.lock.isLocked()) {
+    const enabled = this.config.get('soc.enabled', { infer: true });
+    if (this.lock.isLocked() || !enabled) {
       return;
     }
     await this.lock.runExclusive(async () => {
