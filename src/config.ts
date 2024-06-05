@@ -66,7 +66,9 @@ export function buildConfiguration() {
         certificate: process.env.NFSE_CAXIAS_CERTIFICATE!,
         certificatePassword: process.env.NFSE_CAXIAS_CERTIFICATE_PASSWORD!,
         endpoint: process.env.NFSE_CAXIAS_ENDPOINT!,
-        ambiente: validateEnvironment(process.env.NFSE_CAXIAS_AMBIENTE),
+        ambiente: process.env.NFSE_CAXIAS_AMBIENTE
+          ? validateEnvironment(process.env.NFSE_CAXIAS_AMBIENTE)
+          : NfseEnvironment.TESTING,
       },
       [CidadeEnum.SAO_MARCOS]: {
         provedor: ProvedorEnum.TECNOS,
