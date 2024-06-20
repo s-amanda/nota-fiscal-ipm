@@ -12,8 +12,8 @@ export function formatServico(notaFiscal: NotaFiscal) {
 
   return {
     Valores: formatValores(notaFiscal),
-    IssRetido: pjComIss ? 1 : 2, // 1 sim // 2 nao
-    ResponsavelRetencao: pjComIss ? 2 : 1, // 1 - em caso de ISS não retido // 2-Tomador
+    IssRetido: 2, // 1 sim // 2 nao
+    ResponsavelRetencao: 1, // 1 - em caso de ISS não retido // 2-Tomador
     ItemListaServico: empresa.codigoServico,
     CodigoCnae: '0',
     CodigoTributacaoMunicipio: 0,

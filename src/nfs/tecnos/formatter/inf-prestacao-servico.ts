@@ -23,11 +23,9 @@ export function formatInfoPrestacaoServico(
       IdentificacaoIntermediario: '',
     },
     ConstrucaoCivil: '',
-    RegimeEspecialTributacao: '6', //REVISAR
-    NaturezaOperacao: notaFiscal.naturezaOperacao
-      ? notaFiscal.naturezaOperacao
-      : empresa.naturezaOperacao,
-    OptanteSimplesNacional: empresa.simplesNacional === 'S' ? 1 : 2,
+    RegimeEspecialTributacao: '6',
+    NaturezaOperacao: 6,
+    OptanteSimplesNacional: 1,
     IncentivoFiscal: '2', //Não
     PercentualCargaTributaria: '13.45',
     ValorCargaTributaria: calculoImposto(notaFiscal).valorImpostoFederais,
