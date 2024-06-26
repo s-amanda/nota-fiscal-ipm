@@ -12,6 +12,7 @@ export function formatRps(notaFiscal: NotaFiscal) {
       // 3 – Cupom
     },
     DataEmissao: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+    //DataEmissao: null,
     Status: '1',
   };
 }
