@@ -1,14 +1,9 @@
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
-import { removeFormat } from 'src/nfs/infisc/formatter/cpf-cnpj';
 import { formatValores } from './valor';
 
 export function formatServico(notaFiscal: NotaFiscal) {
   const empresa = notaFiscal.empresa;
   const item = notaFiscal.itens[0]!;
-
-  const documento = removeFormat(notaFiscal.documentoTomador);
-  const valorIss = notaFiscal.valorIss ?? 0;
-  const pjComIss = documento.length > 11 && valorIss > 0;
 
   return {
     Valores: formatValores(notaFiscal),
@@ -20,14 +15,7 @@ export function formatServico(notaFiscal: NotaFiscal) {
     Discriminacao: item.descricao ?? item.servico.descricao,
     CodigoMunicipio: empresa.codigoCidade,
     CodigoPais: '1058',
-    ExigibilidadeISS: '6',
-    // 1-Exigível
-    // 2-Não incidência
-    // 3-Isenção
-    // 4-Exportação
-    // 5-Imunidade
-    // 6-Exigibilidade Suspensa por Decisão Judicial
-    // 7-Exigibilidade Suspensa por Processo Administrativo
+    ExigibilidadeISS: '6', // 6-Exigibilidade Suspensa por Decisão Judicial
     MunicipioIncidencia: empresa.codigoCidade,
   };
 }

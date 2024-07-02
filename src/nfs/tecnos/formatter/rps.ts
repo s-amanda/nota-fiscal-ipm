@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
 
 export function formatRps(notaFiscal: NotaFiscal) {
@@ -5,13 +6,12 @@ export function formatRps(notaFiscal: NotaFiscal) {
     IdentificacaoRps: {
       Numero: notaFiscal.numero,
       Serie: 'UNICA',
-      Tipo: '1',
-      // 1 – RPS
-      // 2 – Nota Fiscal Conjugada (Mista)
-      // 3 – Cupom
+      Tipo: '1', // 1 – RPS
     },
-    //DataEmissao: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
-    DataEmissao: '2024-06-15T14:01:41',
+    DataEmissao: format(
+      notaFiscal.dataRetroativa ?? new Date(),
+      "yyyy-MM-dd'T'HH:mm:ss",
+    ),
     Status: '1',
   };
 }

@@ -94,6 +94,9 @@ export class NotaFiscal {
   @Column({ name: 'DTH_CANCELADA' })
   dataCancelamento!: Date;
 
+  @Column({ name: 'DTH_RETROATIVA_NOTFIS', type: 'datetime' })
+  dataRetroativa!: Date | null;
+
   @Column({ name: 'NUM_TELEFONE_NOTFIS' })
   telefone!: string;
 

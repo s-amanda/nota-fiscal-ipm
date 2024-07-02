@@ -1,4 +1,5 @@
 //import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
 import { calculoImposto } from 'src/nfs/infisc/formatter/calculo-imposto';
 import { formatPrestador } from './prestador';
@@ -13,21 +14,25 @@ export function formatInfoPrestacaoServico(
   const empresa = notaFiscal.empresa;
 
   return {
-    // "@xmlns": "http://www.abrasf.org.br/nfse.xsd/",
     Rps: formatRps(notaFiscal),
-    Competencia: '2024-06-15T14:01:41',
-    //Competencia: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+    Competencia: format(
+      notaFiscal.dataRetroativa ?? new Date(),
+      "yyyy-MM-dd'T'HH:mm:ss",
+    ),
     Servico: { tcDadosServico: formatServico(notaFiscal) },
     Prestador: formatPrestador(notaFiscal),
     Tomador: formatTomador(notaFiscal, codigoIbge),
-    DataFatoGerador: '2024-06-15T14:01:41',
+    DataFatoGerador: format(
+      notaFiscal.dataRetroativa ?? new Date(),
+      "yyyy-MM-dd'T'HH:mm:ss",
+    ),
     Intermediario: {
       IdentificacaoIntermediario: '',
     },
     ConstrucaoCivil: '',
     RegimeEspecialTributacao: '6',
     NaturezaOperacao: 6,
-    OptanteSimplesNacional: 1,
+    OptanteSimplesNacional: 2, //nao
     IncentivoFiscal: '2', //Não
     PercentualCargaTributaria: '13.45',
     ValorCargaTributaria: calculoImposto(notaFiscal).valorImpostoFederais,
