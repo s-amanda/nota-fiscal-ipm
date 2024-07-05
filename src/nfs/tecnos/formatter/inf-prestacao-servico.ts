@@ -32,7 +32,7 @@ export function formatInfoPrestacaoServico(
     ConstrucaoCivil: '',
     RegimeEspecialTributacao: '6',
     NaturezaOperacao: 6,
-    OptanteSimplesNacional: 2, //nao
+    OptanteSimplesNacional: 1,
     IncentivoFiscal: '2', //Não
     PercentualCargaTributaria: '13.45',
     ValorCargaTributaria: calculoImposto(notaFiscal).valorImpostoFederais,

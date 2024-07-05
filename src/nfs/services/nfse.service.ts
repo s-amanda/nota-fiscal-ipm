@@ -120,13 +120,7 @@ export class NotaFiscalService {
     const notaFiscal = await this.buscarNotaFiscal(id);
 
     const strategy = this.strategyProvider.getStrategy(notaFiscal);
-    const pdf = await strategy.gerarPdf(notaFiscal);
-
-    await this.notaFiscalRepository.update(
-      { id: id },
-      { notaFiscalImpressa: 'S' },
-    );
-    return pdf;
+    return await strategy.gerarPdf(notaFiscal);
   }
 
   async cancelarNotaFiscal(id: number, motivo: MotivoCancelamento) {

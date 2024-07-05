@@ -3,7 +3,6 @@ import { formatValores } from './valor';
 
 export function formatServico(notaFiscal: NotaFiscal) {
   const empresa = notaFiscal.empresa;
-  const item = notaFiscal.itens[0]!;
 
   return {
     Valores: formatValores(notaFiscal),
@@ -11,8 +10,8 @@ export function formatServico(notaFiscal: NotaFiscal) {
     ResponsavelRetencao: 1, // 1 - em caso de ISS não retido // 2-Tomador
     ItemListaServico: empresa.codigoServico,
     CodigoCnae: '0',
-    CodigoTributacaoMunicipio: 0,
-    Discriminacao: item.descricao ?? item.servico.descricao,
+    CodigoTributacaoMunicipio: empresa.codigoCidade,
+    Discriminacao: `${notaFiscal.obsComplementar ?? ''} \n ${notaFiscal.obsCorpo ?? ''}`,
     CodigoMunicipio: empresa.codigoCidade,
     CodigoPais: '1058',
     ExigibilidadeISS: '6', // 6-Exigibilidade Suspensa por Decisão Judicial

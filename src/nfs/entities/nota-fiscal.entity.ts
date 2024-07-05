@@ -121,8 +121,11 @@ export class NotaFiscal {
   @Column({ name: 'NUM_LOTE_RPS' })
   numeroLoteRps!: string;
 
-  @Column({ name: 'OBS_COMPLEMENTAR_NOTFIS' })
-  obsComplementar!: string;
+  @Column({ name: 'OBS_COMPLEMENTAR_NOTFIS', type: 'varchar' })
+  obsComplementar!: string | null;
+
+  @Column({ name: 'OBS_CORPO_NOTFIS', type: 'varchar' })
+  obsCorpo!: string | null;
 
   @OneToMany(() => ItemNotaServico, (item) => item.notaFiscal)
   itens!: ItemNotaServico[];

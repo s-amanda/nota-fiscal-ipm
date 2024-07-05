@@ -8,7 +8,7 @@ export function formatValores(notaFiscal: NotaFiscal) {
   const aliquotaIr = notaFiscal.aliquotaIr ?? 0;
 
   return {
-    BaseCalculoCRS: notaFiscal.valorServico.toFixed(2),
+    BaseCalculoCRS: '0.00',
     IrrfIndenizacao: '0.00',
     ValorServicos: notaFiscal.valorServico.toFixed(2),
     ValorDeducoes: '0.00',
