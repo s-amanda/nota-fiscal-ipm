@@ -41,6 +41,10 @@ export class QueueService {
         },
         classification: job.classification,
         sequenceNumber: job.sequenceNumber,
+        accessKey: job.accessKey,
+        userCode: job.userCode,
+        companyCode: job.companyCode,
+        responsibleCode: job.responsibleCode,
       });
 
       this.logger.log(`Arquivo id = ${job.id} enviado`);

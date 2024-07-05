@@ -30,6 +30,18 @@ export class Job {
   @Column({ name: 'codigoSequencialFicha', update: false })
   sequenceNumber!: string;
 
+  @Column({ name: 'codigoUsuario', update: false })
+  userCode!: string;
+
+  @Column({ name: 'chaveAcesso', update: false })
+  accessKey!: string;
+
+  @Column({ name: 'codigoEmpresaPrincipal', update: false })
+  companyCode!: string;
+
+  @Column({ name: 'codigoResponsavel', update: false })
+  responsibleCode!: string;
+
   @Column({
     type: 'char',
   })

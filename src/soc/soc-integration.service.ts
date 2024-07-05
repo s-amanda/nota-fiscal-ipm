@@ -82,19 +82,15 @@ export class SocIntegrationService {
     return client;
   }
 
-  async sendFile({ file, classification, sequenceNumber }: FileRequest) {
-    const chaveAcesso = this.config.getOrThrow('soc.accessKey', {
-      infer: true,
-    });
-    const codigoEmpresaPrincipal = this.config.getOrThrow('soc.companyCode', {
-      infer: true,
-    });
-    const codigoResponsavel = this.config.getOrThrow('soc.responsibleCode', {
-      infer: true,
-    });
-    const codigoUsuario = this.config.getOrThrow('soc.userCode', {
-      infer: true,
-    });
+  async sendFile({
+    file,
+    classification,
+    sequenceNumber,
+    accessKey,
+    userCode,
+    companyCode,
+    responsibleCode,
+  }: FileRequest) {
     const client = await this.createClient();
 
     const attachment = {
@@ -116,10 +112,10 @@ export class SocIntegrationService {
           classificacao: classification,
           codigoSequencialFicha: sequenceNumber,
           identificacaoVo: {
-            chaveAcesso,
-            codigoEmpresaPrincipal,
-            codigoResponsavel,
-            codigoUsuario,
+            chaveAcesso: accessKey,
+            codigoEmpresaPrincipal: companyCode,
+            codigoResponsavel: responsibleCode,
+            codigoUsuario: userCode,
           },
         },
       },
