@@ -16,5 +16,6 @@ export function formatServico(notaFiscal: NotaFiscal) {
     CodigoPais: '1058',
     ExigibilidadeISS: '6', // 6-Exigibilidade Suspensa por Decisão Judicial
     MunicipioIncidencia: empresa.codigoCidade,
+    NumeroProcesso: '',
   };
 }

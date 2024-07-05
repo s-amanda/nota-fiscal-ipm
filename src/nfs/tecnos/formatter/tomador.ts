@@ -12,6 +12,7 @@ export function formatTomador(notaFiscal: NotaFiscal, codigoIbge: string) {
         [numeroDocumento.length > 11 ? 'Cnpj' : 'Cpf']: numeroDocumento,
       },
       InscricaoMunicipal: '',
+      InscricaoEstadual: '',
     },
     RazaoSocial: notaFiscal.nomeTomador,
     Endereco: {

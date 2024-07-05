@@ -19,6 +19,7 @@ export function formatInfoPrestacaoServico(
       notaFiscal.dataRetroativa ?? new Date(),
       "yyyy-MM-dd'T'HH:mm:ss",
     ),
+    IdCidade: notaFiscal.empresa.codigoCidade,
     Servico: { tcDadosServico: formatServico(notaFiscal) },
     Prestador: formatPrestador(notaFiscal),
     Tomador: formatTomador(notaFiscal, codigoIbge),
@@ -26,22 +27,21 @@ export function formatInfoPrestacaoServico(
       notaFiscal.dataRetroativa ?? new Date(),
       "yyyy-MM-dd'T'HH:mm:ss",
     ),
-    Intermediario: {
-      IdentificacaoIntermediario: '',
-    },
-    ConstrucaoCivil: '',
+    Intermediario: {},
+    ConstrucaoCivil: {},
     RegimeEspecialTributacao: '6',
-    NaturezaOperacao: 6,
-    OptanteSimplesNacional: 1,
+    NaturezaOperacao: '6',
+    OptanteSimplesNacional: '1',
     IncentivoFiscal: '2', //Não
     PercentualCargaTributaria: '13.45',
     ValorCargaTributaria: calculoImposto(notaFiscal).valorImpostoFederais,
+    PercentualCargaTributariaEstadual: '0',
+    ValorCargaTributariaEstadual: '0',
     PercentualCargaTributariaMunicipal: '2.09',
     ValorCargaTributariaMunicipal:
       calculoImposto(notaFiscal).valorImpostoMunicipais,
-    PercentualCargaTributariaEstadual: '0',
-    ValorCargaTributariaEstadual: '0',
+    OutrasInformacoes: '',
     SiglaUF: empresa.uf,
-    IdCidade: empresa.codigoCidade,
+    TipoNota: '0',
   };
 }

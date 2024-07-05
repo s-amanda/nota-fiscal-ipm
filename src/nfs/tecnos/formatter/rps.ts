@@ -13,5 +13,10 @@ export function formatRps(notaFiscal: NotaFiscal) {
       "yyyy-MM-dd'T'HH:mm:ss",
     ),
     Status: '1',
+    RpsSubstituido: {
+      Numero: '',
+      Serie: '',
+      Tipo: '0',
+    },
   };
 }

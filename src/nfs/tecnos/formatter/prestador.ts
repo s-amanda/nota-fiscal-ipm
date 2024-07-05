@@ -9,7 +9,23 @@ export function formatPrestador(notaFiscal: NotaFiscal) {
     CpfCnpj: {
       Cnpj: cnpj,
     },
-    RazaoSocial: empresa.nome,
     InscricaoMunicipal: empresa.inscricaoMunicipal,
+    InscricaoEstadual: '',
+
+    RazaoSocial: empresa.nome,
+    Endereco: {
+      Endereco: empresa.logradouro,
+      Numero: empresa.numeroEndereco,
+      Complemento: empresa.complemento,
+      Bairro: empresa.bairro,
+      CodigoMunicipio: empresa.codigoMunicipioTributacao,
+      Uf: empresa.uf,
+      CodigoPais: '1058',
+      Cep: empresa.cep,
+    },
+    Contato: {
+      Telefone: notaFiscal.telefone,
+      Email: notaFiscal.email,
+    },
   };
 }
