@@ -24,7 +24,7 @@ export function formatPrestador(empresa: Empresa) {
     },
     fone: empresa.fone,
     IE: '',
-    regimeTrib: 3,
+    regimeTrib: empresa.simplesNacional === 'S' ? 1 : 3,
   };
 
   return prest;
