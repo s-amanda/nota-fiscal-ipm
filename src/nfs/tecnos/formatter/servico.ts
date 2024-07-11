@@ -11,7 +11,8 @@ export function formatServico(notaFiscal: NotaFiscal) {
     ItemListaServico: empresa.codigoServico,
     //CodigoCnae: '0',
     CodigoTributacaoMunicipio: empresa.codigoCidade,
-    Discriminacao: `${notaFiscal.obsComplementar ?? ''} \n ${notaFiscal.obsCorpo ?? ''}`,
+    Discriminacao:
+      `${notaFiscal.obsComplementar ?? ''} \n ${notaFiscal.obsCorpo ?? ''}`.trim(),
     CodigoMunicipio: empresa.codigoCidade,
     CodigoPais: '1058',
     ExigibilidadeISS: '6', // 6-Exigibilidade Suspensa por Decisão Judicial
