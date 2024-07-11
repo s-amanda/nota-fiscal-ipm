@@ -18,8 +18,8 @@ export function formatValores(notaFiscal: NotaFiscal) {
     ValorIr: ((notaFiscal.valorServico * aliquotaIr) / 100).toFixed(2),
     ValorCsll: ((notaFiscal.valorServico * aliquotaCsll) / 100).toFixed(2),
     OutrasRetencoes: '0.00',
-    // ValorIss: '0.00',
-    Aliquota: aliquotaIss,
+    ValorIss: '0.00',
+    Aliquota: '00.00',
     DescontoIncondicionado: '0.00',
     DescontoCondicionado: '0.00',
   };

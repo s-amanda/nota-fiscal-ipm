@@ -88,6 +88,9 @@ export class NotaFiscal {
   @Column({ name: 'NUM_RPS_NOTFIS' })
   numeroRps!: number;
 
+  @Column({ name: 'FLG_TIPO_PAGAMENTO' })
+  tipoPagamento!: string;
+
   @Column({ name: 'FLG_SUCESSO_NF' })
   sucesso!: string;
 
