@@ -1,7 +1,7 @@
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
 
 export function formatValores(notaFiscal: NotaFiscal) {
-  const aliquotaIss = notaFiscal.aliquotaIss ?? notaFiscal.empresa.aliquotaIss;
+  const aliquotaIss = notaFiscal.aliquotaIss;
   const aliquotaPis = notaFiscal.aliquotaPis ?? 0;
   const aliquotaCsll = notaFiscal.aliquotaCsll ?? 0;
   const aliquotaCofins = notaFiscal.aliquotaCofins ?? 0;
