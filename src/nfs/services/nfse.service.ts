@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,6 +24,7 @@ import { NfseStrategyProvider } from './nfse.strategy';
 */
 @Injectable()
 export class NotaFiscalService {
+  private logger = new Logger(NotaFiscalService.name);
   private mutex = new Mutex();
 
   constructor(
@@ -43,6 +45,7 @@ export class NotaFiscalService {
       }
 
       notaFiscal.numero = await this.buscarNumeroNotaEmpresa(notaFiscal);
+      this.logger.log(`Gerando nota número ${notaFiscal.numero}`);
 
       const codigoIbge = await this.getCodigoIbge(
         notaFiscal.cidade,
@@ -87,6 +90,7 @@ export class NotaFiscalService {
             numeroLoteRps: idNotaGerada,
           },
         );
+        this.logger.log(`Nota gerada com sucesso`);
 
         if (notaFiscal.email) {
           this.enviarEmailNotaFiscal(notaFiscal).catch(console.error);
@@ -94,6 +98,7 @@ export class NotaFiscalService {
 
         return { id: idNotaGerada };
       } catch (error) {
+        this.logger.error(`Erro ao gerar nota: ${error}`);
         if (error instanceof ClientError) {
           await this.historicoNfseService.gravarHistorico(
             notaFiscal,

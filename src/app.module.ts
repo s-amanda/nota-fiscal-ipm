@@ -28,7 +28,7 @@ import { SocModule } from './soc/soc.module';
         password: config.getOrThrow('database.password', { infer: true }),
         database: config.getOrThrow('database.database', { infer: true }),
         synchronize: false,
-        logging: ['query'],
+        logging: ['warn'],
         options: {
           trustServerCertificate: true,
           encrypt: false,
