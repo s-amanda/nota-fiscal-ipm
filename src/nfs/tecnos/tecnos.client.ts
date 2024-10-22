@@ -1,4 +1,5 @@
 import { XMLParser } from 'fast-xml-parser';
+import fs from 'fs/promises';
 import { create } from 'xmlbuilder2';
 import { ClientError, ClientResponse } from '../client/response';
 import { SoapClient } from '../client/soap-client';
@@ -105,6 +106,10 @@ export class TecnosClient {
       },
     });
 
+    await fs.writeFile('consulta.xml', response.rawResponse, {
+      encoding: 'utf-8',
+    });
+
     const primeiraTag = Object.values(response.data)[0]!;
     const result = Object.values(primeiraTag as object)[0]!;
 
@@ -144,8 +149,6 @@ export class TecnosClient {
       elemento: 'InfPedidoCancelamento',
       client: this.soapCancelamento,
     });
-
-    console.log(JSON.stringify(response.data, null, 2));
 
     const codigo = response.data.MensagemRetorno?.MensagemRetorno?.Codigo;
 

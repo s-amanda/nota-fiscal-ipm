@@ -9,7 +9,6 @@ export function formatServico(notaFiscal: NotaFiscal) {
     IssRetido: 2, // 1 sim // 2 nao
     ResponsavelRetencao: 1, // 1 - em caso de ISS não retido // 2-Tomador
     ItemListaServico: empresa.codigoServico,
-    //CodigoCnae: '0',
     CodigoTributacaoMunicipio: empresa.codigoCidade,
     Discriminacao:
       `${notaFiscal.obsComplementar ?? ''} \n ${notaFiscal.obsCorpo ?? ''}`.trim(),

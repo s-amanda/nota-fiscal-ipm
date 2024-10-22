@@ -1,7 +1,6 @@
 import { NotaFiscal } from 'src/nfs/entities/nota-fiscal.entity';
 
 export function formatValores(notaFiscal: NotaFiscal) {
-  const aliquotaIss = notaFiscal.aliquotaIss;
   const aliquotaPis = notaFiscal.aliquotaPis ?? 0;
   const aliquotaCsll = notaFiscal.aliquotaCsll ?? 0;
   const aliquotaCofins = notaFiscal.aliquotaCofins ?? 0;
@@ -19,7 +18,7 @@ export function formatValores(notaFiscal: NotaFiscal) {
     ValorCsll: ((notaFiscal.valorServico * aliquotaCsll) / 100).toFixed(2),
     OutrasRetencoes: '0.00',
     ValorIss: '0.00',
-    Aliquota: aliquotaIss,
+    Aliquota: '3',
     DescontoIncondicionado: '0.00',
     DescontoCondicionado: '0.00',
   };
