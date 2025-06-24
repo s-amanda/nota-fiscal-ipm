@@ -47,8 +47,11 @@ export class Job {
   })
   status!: JobStatus | null;
 
+  @Column({ name: 'requisicao', type: 'text' })
+  requestXml!: string;
+
   @Column({ name: 'retorno', type: 'text' })
-  response!: string;
+  responseXml!: string;
 }
 
 // create table TB_INT_SOC(

@@ -130,5 +130,11 @@ export class SocIntegrationService {
         },
       },
     );
+    return {
+      requestXml: client.lastRequest,
+      responseXml: typeof client.lastResponse === 'string'
+        ? client.lastResponse
+        : JSON.stringify(client.lastResponse),
+    };
   }
 }

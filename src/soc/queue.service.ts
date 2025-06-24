@@ -33,7 +33,7 @@ export class QueueService {
     const fileContent = await this.getJobFile(job);
 
     try {
-      await this.socIntegration.sendFile({
+      const { requestXml, responseXml } = await this.socIntegration.sendFile({
         file: {
           type: 'application/pdf',
           name: job.fileName,
@@ -50,13 +50,13 @@ export class QueueService {
       this.logger.log(`Arquivo id = ${job.id} enviado`);
       await this.repository.update(
         { id: job.id },
-        { status: JobStatus.COMPLETED },
+        { status: JobStatus.COMPLETED, responseXml, requestXml },
       );
     } catch (error: any) {
       this.logger.error(`Falha ao enviar arquivo id = ${job.id}`, error);
       await this.repository.update(
         { id: job.id },
-        { status: JobStatus.FAILED, response: error?.message },
+        { status: JobStatus.FAILED, responseXml: error?.message },
       );
     }
   }
