@@ -101,40 +101,62 @@ export class SocIntegrationService {
     };
     const fileExtension = path.extname(attachment.name).substring(1);
 
-    await client.uploadArquivoAsync(
-      {
-        arg0: {
-          arquivo: {
-            $xml: `<xop:Include href="cid:${attachment.contentId}"/>`,
-          },
-          nomeArquivo: getFileNameWithoutExtension(attachment.name),
-          extensaoArquivo: fileExtension.toUpperCase(),
-          classificacao: classification,
-          codigoSequencialFicha: sequenceNumber,
-          identificacaoVo: {
-            chaveAcesso: accessKey,
-            codigoEmpresaPrincipal: companyCode,
-            codigoResponsavel: responsibleCode,
-            codigoUsuario: userCode,
+    try {
+      await client.uploadArquivoAsync(
+        {
+          arg0: {
+            arquivo: {
+              $xml: `<xop:Include href="cid:${attachment.contentId}"/>`,
+            },
+            nomeArquivo: getFileNameWithoutExtension(attachment.name),
+            extensaoArquivo: fileExtension.toUpperCase(),
+            classificacao: classification,
+            codigoSequencialFicha: sequenceNumber,
+            identificacaoVo: {
+              chaveAcesso: accessKey,
+              codigoEmpresaPrincipal: companyCode,
+              codigoResponsavel: responsibleCode,
+              codigoUsuario: userCode,
+            },
           },
         },
-      },
-      {
-        attachments: [attachment],
-        postProcess: (xml: string) => {
-          const expires = formatDate(new Date(Date.now() + 1000 * 60));
-          return xml.replace(
-            /<wsu:Expires>[^>]+<\/wsu:Expires>/,
-            `<wsu:Expires>${expires}</wsu:Expires>`,
-          );
+        {
+          attachments: [attachment],
+          postProcess: (xml: string) => {
+            const expires = formatDate(new Date(Date.now() + 1000 * 60));
+            return xml.replace(
+              /<wsu:Expires>[^>]+<\/wsu:Expires>/,
+              `<wsu:Expires>${expires}</wsu:Expires>`,
+            );
+          },
         },
-      },
-    );
-    return {
-      requestXml: client.lastRequest,
-      responseXml: typeof client.lastResponse === 'string'
-        ? client.lastResponse
-        : JSON.stringify(client.lastResponse),
-    };
+      );
+      return {
+        requestXml: client.lastRequest,
+        responseXml:
+          typeof client.lastResponse === 'string'
+            ? client.lastResponse
+            : JSON.stringify(client.lastResponse),
+      };
+    } catch (error: any) {
+      throw new IntegracaoSocException(
+        error.message,
+        client.lastRequest ?? '',
+        typeof client.lastResponse === 'string'
+          ? client.lastResponse
+          : JSON.stringify(client.lastResponse),
+      );
+    }
+  }
+}
+
+export class IntegracaoSocException extends Error {
+  constructor(
+    message: string,
+    public readonly requestXml: string,
+    public readonly responseXml: string,
+  ) {
+    super(message);
+    this.name = 'IntegracaoSocException';
   }
 }

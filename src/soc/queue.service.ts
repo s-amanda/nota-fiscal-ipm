@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Job, JobStatus } from 'src/soc/entities/job';
-import { SocIntegrationService } from 'src/soc/soc-integration.service';
+import {
+  IntegracaoSocException,
+  SocIntegrationService,
+} from 'src/soc/soc-integration.service';
 import { IsNull, Repository } from 'typeorm';
 
 @Injectable()
@@ -54,10 +57,21 @@ export class QueueService {
       );
     } catch (error: any) {
       this.logger.error(`Falha ao enviar arquivo id = ${job.id}`, error);
-      await this.repository.update(
-        { id: job.id },
-        { status: JobStatus.FAILED, responseXml: error?.message },
-      );
+      if (error instanceof IntegracaoSocException) {
+        await this.repository.update(
+          { id: job.id },
+          {
+            status: JobStatus.FAILED,
+            responseXml: error.responseXml,
+            requestXml: error.requestXml,
+          },
+        );
+      } else {
+        await this.repository.update(
+          { id: job.id },
+          { status: JobStatus.FAILED, responseXml: error.message },
+        );
+      }
     }
   }
 }
