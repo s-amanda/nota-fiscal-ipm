@@ -40,6 +40,7 @@ export function buildConfiguration() {
     soc: {
       enabled: !!process.env.SOC_INTEGRATION_ENDPOINT,
       endpoint: process.env.SOC_INTEGRATION_ENDPOINT,
+      resultEndpoint: process.env.SOC_INTEGRATION_RESULT_ENDPOINT,
       username: process.env.SOC_INTEGRATION_USERNAME,
       password: process.env.SOC_INTEGRATION_PASSWORD,
     },

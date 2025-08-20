@@ -1,12 +1,12 @@
 import { Column, ColumnOptions, Entity, PrimaryColumn } from 'typeorm';
 
-export enum JobStatus {
-  COMPLETED = '1',
-  FAILED = '0',
+export enum StatusEnvio {
+  SUCESSO = '1',
+  ERRO = '0',
 }
 
 @Entity({ name: 'TB_INT_SOC' })
-export class Job {
+export class TarefaEnvioSoc {
   @PrimaryColumn()
   id!: number;
 
@@ -19,39 +19,45 @@ export class Job {
       from: (base64: string) => Buffer.from(base64, 'base64'),
     },
   } as ColumnOptions)
-  fileContent!: Buffer;
+  conteudoArquivo!: Buffer;
 
   @Column({ name: 'nomeArquivo', update: false })
-  fileName!: string;
+  nomeArquivo!: string;
 
   @Column({ name: 'classificacao', update: false })
-  classification!: string;
+  classificacao!: string;
 
   @Column({ name: 'codigoSequencialFicha', update: false })
-  sequenceNumber!: string;
+  codigoSequencialFicha!: string;
 
   @Column({ name: 'codigoUsuario', update: false })
-  userCode!: string;
+  codigoUsuario!: string;
 
   @Column({ name: 'chaveAcesso', update: false })
-  accessKey!: string;
+  chaveAcesso!: string;
 
   @Column({ name: 'codigoEmpresaPrincipal', update: false })
-  companyCode!: string;
+  codigoEmpresaPrincipal!: string;
 
   @Column({ name: 'codigoResponsavel', update: false })
-  responsibleCode!: string;
+  codigoResponsavel!: string;
+
+  @Column({ name: 'codigo_pedido', type: 'int' })
+  codigoPedido!: number;
+
+  @Column({ name: 'posto_pedido', type: 'char' })
+  postoPedido!: string;
 
   @Column({
     type: 'char',
   })
-  status!: JobStatus | null;
+  status!: StatusEnvio | null;
 
   @Column({ name: 'requisicao', type: 'text' })
-  requestXml!: string;
+  requisicaoXml!: string;
 
   @Column({ name: 'retorno', type: 'text' })
-  responseXml!: string;
+  retornoXml!: string;
 }
 
 // create table TB_INT_SOC(

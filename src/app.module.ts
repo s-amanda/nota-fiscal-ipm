@@ -12,8 +12,9 @@ import { Pessoa } from './nfs/entities/pessoa.entity';
 import { Servico } from './nfs/entities/servico.entity';
 import { Uf } from './nfs/entities/uf.entity';
 import { NfsModule } from './nfs/nfs.module';
-import { Job } from './soc/entities/job';
+import { TarefaEnvioSoc } from './soc/entities/tarefa-envio-soc';
 import { SocModule } from './soc/soc.module';
+import { ExameSoc } from './soc/entities/exame-soc';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { SocModule } from './soc/soc.module';
           encrypt: false,
         },
         entities: [
-          Job,
+          TarefaEnvioSoc,
+          ExameSoc,
           Empresa,
           NotaFiscal,
           ItemNotaServico,
@@ -50,7 +52,7 @@ import { SocModule } from './soc/soc.module';
     ConfigModule.forRoot({
       load: [buildConfiguration],
     }),
-    TypeOrmModule.forFeature([Job]),
+    TypeOrmModule.forFeature([TarefaEnvioSoc]),
     SocModule,
     NfsModule,
   ],

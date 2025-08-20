@@ -1,13 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Job } from 'src/soc/entities/job';
-import { FileQueue } from 'src/soc/queue';
-import { QueueService } from 'src/soc/queue.service';
-import { SocIntegrationService } from './soc-integration.service';
+import { TarefaEnvioSoc } from 'src/soc/entities/tarefa-envio-soc';
+import { FilaTarefas } from 'src/soc/fila-tarefas';
+import { TarefaService } from 'src/soc/tarefa.service';
+import { IntegracaoSocService } from './integracao-soc.service';
+import { PedidoExameRepository } from './pedido-exame.repository';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([Job])],
-  providers: [SocIntegrationService, FileQueue, QueueService],
+  imports: [ConfigModule, TypeOrmModule.forFeature([TarefaEnvioSoc])],
+  providers: [
+    IntegracaoSocService,
+    FilaTarefas,
+    TarefaService,
+    PedidoExameRepository,
+  ],
 })
 export class SocModule {}
