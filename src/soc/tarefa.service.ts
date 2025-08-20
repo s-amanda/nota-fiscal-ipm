@@ -45,7 +45,6 @@ export class TarefaService {
         );
 
       for (const exame of dadosExamesPedido) {
-        console.log(dadosExamesPedido)
         await this.integracaoSoc.perencheDataResultadoExame(tarefa, exame);
       }
 
