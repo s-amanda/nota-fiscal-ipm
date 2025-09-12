@@ -21,9 +21,11 @@ export class Historico {
   @Column({ name: 'USERNAME' })
   user!: string;
 
+  // <numero_nfse>52270</numero_nfse>
   @Column({ name: 'NUM_PROT_HISTNFE', type: 'varchar' })
   protocolo!: string | null;
 
+  // <cod_verificador_autenticidade>8083110925200412280019223112025097347211</cod_verificador_autenticidade>
   @Column({ name: 'NUM_CHAVE_ACESSO', type: 'varchar' })
   chaveAcesso!: string | null;
 

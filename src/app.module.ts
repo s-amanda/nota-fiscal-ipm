@@ -12,9 +12,6 @@ import { Pessoa } from './nfs/entities/pessoa.entity';
 import { Servico } from './nfs/entities/servico.entity';
 import { Uf } from './nfs/entities/uf.entity';
 import { NfsModule } from './nfs/nfs.module';
-import { TarefaEnvioSoc } from './soc/entities/tarefa-envio-soc';
-import { SocModule } from './soc/soc.module';
-import { ExameSoc } from './soc/entities/exame-soc';
 
 @Module({
   imports: [
@@ -29,14 +26,12 @@ import { ExameSoc } from './soc/entities/exame-soc';
         password: config.getOrThrow('database.password', { infer: true }),
         database: config.getOrThrow('database.database', { infer: true }),
         synchronize: false,
-        logging: ['warn'],
+        logging: ['query'],
         options: {
           trustServerCertificate: true,
           encrypt: false,
         },
         entities: [
-          TarefaEnvioSoc,
-          ExameSoc,
           Empresa,
           NotaFiscal,
           ItemNotaServico,
@@ -52,8 +47,6 @@ import { ExameSoc } from './soc/entities/exame-soc';
     ConfigModule.forRoot({
       load: [buildConfiguration],
     }),
-    TypeOrmModule.forFeature([TarefaEnvioSoc]),
-    SocModule,
     NfsModule,
   ],
 })

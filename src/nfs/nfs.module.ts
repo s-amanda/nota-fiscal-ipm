@@ -10,10 +10,9 @@ import { NotaFiscal } from './entities/nota-fiscal.entity';
 import { Pessoa } from './entities/pessoa.entity';
 import { Servico } from './entities/servico.entity';
 import { Uf } from './entities/uf.entity';
-import { EmailService } from './services/email.service';
+import { HttpModule } from '@nestjs/axios';
+import { NotaFiscalService } from './nfse.service';
 import { HistoricoNfseService } from './services/historico-nfse.service';
-import { NotaFiscalService } from './services/nfse.service';
-import { NfseStrategyProvider } from './services/nfse.strategy';
 
 @Module({
   imports: [
@@ -28,15 +27,14 @@ import { NfseStrategyProvider } from './services/nfse.strategy';
       Uf,
       Historico,
     ]),
+    HttpModule.register({
+      baseURL: 'https://concordia.atende.net',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }),
   ],
-  providers: [
-    // InfiscClient,
-    // InfiscService,
-    NotaFiscalService,
-    HistoricoNfseService,
-    EmailService,
-    NfseStrategyProvider,
-  ],
+  providers: [NotaFiscalService, HistoricoNfseService],
   controllers: [NfseController],
 })
 export class NfsModule {}

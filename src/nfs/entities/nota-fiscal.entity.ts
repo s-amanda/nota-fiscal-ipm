@@ -130,6 +130,9 @@ export class NotaFiscal {
   @Column({ name: 'OBS_CORPO_NOTFIS', type: 'varchar' })
   obsCorpo!: string | null;
 
+  @Column({ name: 'link_nota_ipm', type: 'text' })
+  linkNotaIpM!: string | null;
+
   @OneToMany(() => ItemNotaServico, (item) => item.notaFiscal)
   itens!: ItemNotaServico[];
 
