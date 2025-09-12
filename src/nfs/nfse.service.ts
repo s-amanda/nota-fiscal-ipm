@@ -30,9 +30,9 @@ export class NotaFiscalService {
 
   async emitirNfse(notaFiscalId: number) {
     const notaFiscal = await this.buscarNotaFiscal(notaFiscalId);
-    // if (notaFiscal.notaFiscalSalva === 'S') {
-    //   throw new BadRequestException('A nota fiscal já foi enviada');
-    // }
+    if (notaFiscal.notaFiscalSalva === 'S') {
+      throw new BadRequestException('A nota fiscal já foi enviada');
+    }
 
     notaFiscal.numero = await this.buscarNumeroNotaEmpresa(notaFiscal);
     this.logger.log(`Gerando nota número ${notaFiscal.numero}`);
@@ -119,11 +119,13 @@ export class NotaFiscalService {
 
     console.log(xmlRequisicao);
 
+    const nomeArquivo = `${cnpj}_${format(new Date(), 'yyMMdd_HHmmss')}.xml`;
+
     const form = new FormData();
     form.append(
       'f1',
       new Blob([xmlRequisicao], { type: 'text/xml' }),
-      '01922311000170_250905_164158.xml',
+      nomeArquivo,
     );
 
     try {
