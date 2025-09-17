@@ -58,7 +58,7 @@ export class NotaFiscalService {
 
     const dadosXmlRequisicao = {
       nfse: {
-        nfse_teste: '1',
+        //nfse_teste: '1',
         nf: {
           valor_total: notaFiscal.valorServico.toFixed(2).replace('.', ','),
           valor_desconto: '0',
