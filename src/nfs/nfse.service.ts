@@ -16,6 +16,7 @@ import { HttpService } from '@nestjs/axios';
 import { isAxiosError } from 'axios';
 import { HistoricoNfseService } from './services/historico-nfse.service';
 import { XMLParser } from 'fast-xml-parser';
+import { Cidade } from './entities/cidade.entity';
 
 @Injectable()
 export class NotaFiscalService {
@@ -25,6 +26,7 @@ export class NotaFiscalService {
     @InjectRepository(NotaFiscal)
     private notaFiscalRepository: Repository<NotaFiscal>,
     private historicoNfseService: HistoricoNfseService,
+    private cidadeRepository: Repository<Cidade>,
     private readonly httpService: HttpService,
   ) {}
 
@@ -47,29 +49,35 @@ export class NotaFiscalService {
 
     const documentoTomador = removeFormat(notaFiscal.documentoTomador);
 
+    const cidadeTomador = await this.getCodigoCidade(
+      notaFiscal.cidade,
+      notaFiscal.uf,
+    );
+
+    const cidadePrestador = await this.getCodigoCidade(
+      empresa.cidade,
+      empresa.uf,
+    );
+
     const dadosXmlRequisicao = {
       nfse: {
         nfse_teste: '1',
         nf: {
           valor_total: notaFiscal.valorServico.toFixed(2).replace('.', ','),
           valor_desconto: '0',
-          valor_ir: ((notaFiscal.valorServico * aliquotaIr) / 100)
+          valor_ir: notaFiscal.valorIrrf.toFixed(2).replace('.', ','),
+          valor_inss: notaFiscal.valorIss?.toFixed(2).replace('.', ',') || '0',
+          valor_contribuicao_social: notaFiscal.valorCssl
             .toFixed(2)
             .replace('.', ','),
-          valor_inss: '0',
-          valor_contribuicao_social: '0',
           valor_rps: '0',
-          valor_pis: ((notaFiscal.valorServico * aliquotaPis) / 100)
-            .toFixed(2)
-            .replace('.', ','),
-          valor_cofins: ((notaFiscal.valorServico * aliquotaCofins) / 100)
-            .toFixed(2)
-            .replace('.', ','),
+          valor_pis: notaFiscal.valorPis.toFixed(2).replace('.', ','),
+          valor_cofins: notaFiscal.valorCofins.toFixed(2).replace('.', ','),
           observacao: notaFiscal.obsComplementar || '',
         },
         prestador: {
           cpfcnpj: cnpj,
-          cidade: '8083', //número da cidade concórdia na receita federal
+          cidade: cidadePrestador,
         },
         tomador: {
           tipo: documentoTomador.length === 11 ? 'F' : 'J',
@@ -83,7 +91,7 @@ export class NotaFiscalService {
           complemento: notaFiscal.complemento,
           ponto_referencia: '',
           bairro: notaFiscal.bairro,
-          cidade: '8083', //é sempre concórdia?
+          cidade: cidadeTomador,
           cep: String(notaFiscal.cep).replace(/-/g, '').trim(),
           ddd_fone_comercial: '',
           fone_comercial: notaFiscal.telefone,
@@ -94,10 +102,10 @@ export class NotaFiscalService {
         },
         itens: notaFiscal.itens.map((item) => ({
           lista: {
-            codigo_local_prestacao_servico: '8083', ///?????
-            codigo_item_lista_servico: empresa.codigoLcServico,
-            descritivo: item.descricao ?? item.servico.descricao,
-            aliquota_item_lista_servico: '3', ///?????
+            codigo_local_prestacao_servico: cidadePrestador,
+            codigo_item_lista_servico: empresa.codigoServico,
+            descritivo: 'Exames de laboratórios',
+            aliquota_item_lista_servico: empresa.aliquotaIss,
             situacao_tributaria: '0',
             valor_tributavel: notaFiscal.valorServico
               .toFixed(2)
@@ -105,7 +113,7 @@ export class NotaFiscalService {
             valor_deducao: '0',
             valor_issrf: '0',
             tributa_municipio_prestador: 'S',
-            unidade_codigo: '1', ///?????
+            unidade_codigo: '1',
             unidade_quantidade: item.quantidade,
             unidade_valor_unitario: item.valorUnidade
               .toFixed(2)
@@ -291,5 +299,17 @@ export class NotaFiscalService {
       .getRawOne();
 
     return (numero + 1) as number;
+  }
+
+  private async getCodigoCidade(nomeCidade: string, uf: string) {
+    const { codigoSerpro } = await this.cidadeRepository
+      .createQueryBuilder('cidade')
+      .select('MAX(cidade.codigoSerpro)', 'codigoSerpro')
+      .innerJoin('cidade.uf', 'uf')
+      .where('UPPER(cidade.descricao) = UPPER(:nomeCidade)', { nomeCidade })
+      .andWhere('UPPER(uf.uf) = LTRIM(UPPER(:uf))', { uf })
+      .getRawOne();
+
+    return codigoSerpro as string;
   }
 }

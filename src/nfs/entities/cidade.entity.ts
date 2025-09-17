@@ -15,6 +15,9 @@ export class Cidade {
   @Column({ name: 'COD_IBGE_CIDADE' })
   codigoIbge!: string;
 
+  @Column({ name: 'COD_SERPRO_CIDADE' })
+  codigoSerpro!: string;
+
   @JoinColumn({ name: 'cod_uf' })
   @ManyToOne(() => Uf, (uf) => uf.cidades)
   uf!: Uf;

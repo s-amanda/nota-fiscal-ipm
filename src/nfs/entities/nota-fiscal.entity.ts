@@ -119,7 +119,7 @@ export class NotaFiscal {
   valorIrrf!: number;
 
   @Column({ name: 'VLR_CSSL_NOTFIS' })
-  valorCsll!: number;
+  valorCssl!: number;
 
   @Column({ name: 'NUM_LOTE_RPS' })
   numeroLoteRps!: string;
