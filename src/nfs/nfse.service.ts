@@ -26,6 +26,7 @@ export class NotaFiscalService {
     @InjectRepository(NotaFiscal)
     private notaFiscalRepository: Repository<NotaFiscal>,
     private historicoNfseService: HistoricoNfseService,
+    @InjectRepository(Cidade)
     private cidadeRepository: Repository<Cidade>,
     private readonly httpService: HttpService,
   ) {}
