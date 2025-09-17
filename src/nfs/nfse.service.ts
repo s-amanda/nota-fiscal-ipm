@@ -40,10 +40,6 @@ export class NotaFiscalService {
     notaFiscal.numero = await this.buscarNumeroNotaEmpresa(notaFiscal);
     this.logger.log(`Gerando nota número ${notaFiscal.numero}`);
 
-    const aliquotaIr = notaFiscal.aliquotaIr ?? 0;
-    const aliquotaPis = notaFiscal.aliquotaPis ?? 0;
-    const aliquotaCofins = notaFiscal.aliquotaCofins ?? 0;
-
     const empresa = notaFiscal.empresa;
     //const cnpj = removeFormat(empresa.cnpj);
     const cnpj = '1922311000170';
@@ -66,14 +62,14 @@ export class NotaFiscalService {
         nf: {
           valor_total: notaFiscal.valorServico.toFixed(2).replace('.', ','),
           valor_desconto: '0',
-          valor_ir: notaFiscal.valorIrrf.toFixed(2).replace('.', ','),
+          valor_ir: notaFiscal.valorIrrf?.toFixed(2).replace('.', ',') || '0',
           valor_inss: notaFiscal.valorIss?.toFixed(2).replace('.', ',') || '0',
-          valor_contribuicao_social: notaFiscal.valorCssl
-            .toFixed(2)
-            .replace('.', ','),
+          valor_contribuicao_social:
+            notaFiscal.valorCssl?.toFixed(2).replace('.', ',') || '0',
           valor_rps: '0',
-          valor_pis: notaFiscal.valorPis.toFixed(2).replace('.', ','),
-          valor_cofins: notaFiscal.valorCofins.toFixed(2).replace('.', ','),
+          valor_pis: notaFiscal.valorPis?.toFixed(2).replace('.', ',') || '0',
+          valor_cofins:
+            notaFiscal.valorCofins?.toFixed(2).replace('.', ',') || '0',
           observacao: notaFiscal.obsComplementar || '',
         },
         prestador: {
