@@ -37,8 +37,7 @@ export class NotaFiscalService {
       throw new BadRequestException('A nota fiscal já foi enviada');
     }
 
-    notaFiscal.numero = await this.buscarNumeroNotaEmpresa(notaFiscal);
-    this.logger.log(`Gerando nota número ${notaFiscal.numero}`);
+    this.logger.log(`Gerando nota`);
 
     const empresa = notaFiscal.empresa;
     //const cnpj = removeFormat(empresa.cnpj);
@@ -179,10 +178,10 @@ export class NotaFiscalService {
         {
           notaFiscalSalva: 'S',
           notaFiscalImpressa: 'S',
-          numero: notaFiscal.numero,
+          numero: resposta.retorno.numero_nfse,
           sucesso: 'S',
-          numeroLote: notaFiscal.numero,
-          numeroRps: notaFiscal.numero,
+          numeroLote: resposta.retorno.numero_nfse,
+          numeroRps: resposta.retorno.numero_nfse,
           numeroLoteRps: String(notaFiscalId),
           linkNotaIpM: resposta.retorno.link_nfse,
         },
@@ -279,23 +278,6 @@ export class NotaFiscalService {
     }
 
     return notaFiscal;
-  }
-
-  private async buscarNumeroNotaEmpresa(notaFiscal: NotaFiscal) {
-    const idEmpresa = notaFiscal.empresa.id;
-
-    const { numero } = await this.notaFiscalRepository
-      .createQueryBuilder('notaFiscal')
-      .select('MAX(notaFiscal.numero)', 'numero')
-      .innerJoin('notaFiscal.empresa', 'empresa')
-      .where('empresa.id = :idEmpresa', { idEmpresa })
-      .andWhere(
-        `(notaFiscal.notaFiscalImpressa = 'S' or notaFiscal.notaFiscalImpressa = 'A')`,
-      )
-      .andWhere('notaFiscal.numeroLote is not null')
-      .getRawOne();
-
-    return (numero + 1) as number;
   }
 
   private async getCodigoCidade(nomeCidade: string, uf: string) {
