@@ -40,8 +40,8 @@ export class NotaFiscalService {
     this.logger.log(`Gerando nota`);
 
     const empresa = notaFiscal.empresa;
-    //const cnpj = removeFormat(empresa.cnpj);
-    const cnpj = '1922311000170';
+    const cnpj = removeFormat(empresa.cnpj);
+    // const cnpj = '1922311000170';
 
     const documentoTomador = removeFormat(notaFiscal.documentoTomador);
 
@@ -142,7 +142,7 @@ export class NotaFiscalService {
               'content-type': 'multipart/form-data',
             },
             responseType: 'text',
-            auth: { username: '01922311000170', password: '1234567' },
+            auth: { username: cnpj, password: '1234567' },
           },
         ),
       );
